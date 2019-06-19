@@ -51,7 +51,7 @@
       <HintPath>..\..\..\..\..\LaunchBox\Metadata\Unbroken.LaunchBox.dll</HintPath>
     </Reference>
     <Reference Include="Unbroken.LaunchBox.Plugins">
-      <HintPath>..\..\..\..\LaunchBox\Metadata\Unbroken.LaunchBox.Plugins.dll</HintPath>
+      <HintPath>..\..\..\..\..\LaunchBox\Metadata\Unbroken.LaunchBox.Plugins.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

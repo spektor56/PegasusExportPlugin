@@ -128,10 +128,14 @@ namespace PegasusExportPlugin
                                     }
                                 }
 
-                                var video = game.GetVideoPath();
-                                if (!string.IsNullOrWhiteSpace(video) && File.Exists(video))
+                                if(checkedItems.Contains("video"))
                                 {
-                                    File.Copy(video, Path.Combine(mediaFolder, "video" + Path.GetExtension(video)), true);
+                                    var video = game.GetVideoPath();
+                                    if (!string.IsNullOrWhiteSpace(video) && File.Exists(video))
+                                    {
+                                        File.Copy(video, Path.Combine(mediaFolder, "video" + Path.GetExtension(video)),
+                                            true);
+                                    }
                                 }
                             }
 
@@ -265,12 +269,10 @@ namespace PegasusExportPlugin
                                 }
                                 else
                                 {
-                                    foreach (var image in game.Value)
-                                    {
-                                        File.Copy(image.FilePath,
-                                            Path.Combine(mediaFolder, pegasusImageType + Path.GetExtension(image.FilePath)),
-                                            true);
-                                    }
+                                    var firstImage = game.Value.First();
+                                    File.Copy(firstImage.FilePath,
+                                        Path.Combine(mediaFolder, pegasusImageType + Path.GetExtension(firstImage.FilePath)),
+                                        true);
                                 }
                             }
                         }
