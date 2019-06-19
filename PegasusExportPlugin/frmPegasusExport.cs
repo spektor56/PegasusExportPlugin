@@ -145,7 +145,7 @@ namespace PegasusExportPlugin
                                 {
                                     File.Copy(game.ApplicationPath,
                                         Path.Combine(platformPath, Path.GetFileName(game.ApplicationPath)), true);
-                                    var fileExtension = Path.GetExtension(game.ApplicationPath);
+                                    var fileExtension = Path.GetExtension(game.ApplicationPath).Replace(".", "");
                                     if (!fileExtensions.Contains(fileExtension))
                                     {
                                         fileExtensions.Add(fileExtension);
@@ -163,6 +163,12 @@ namespace PegasusExportPlugin
                                     {
                                         var file = Path.GetFileName(game.ApplicationPath);
                                         gameMetadata.AppendLine($"file: {file}");
+
+                                        var fileExtension = Path.GetExtension(file).Replace(".","");
+                                        if (!fileExtensions.Contains(fileExtension))
+                                        {
+                                            fileExtensions.Add(fileExtension);
+                                        }
                                     }
 
                                     if (!string.IsNullOrWhiteSpace(game.Developer))
