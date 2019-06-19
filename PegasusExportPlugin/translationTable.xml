@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Translation>
+    <imageType>
+      <key>Box - Front</key>
+      <value>boxFront</value>
+    </imageType>
+    <imageType>
+      <key>Box - Front - Reconstructed</key>
+      <value>boxFront</value>
+    </imageType>
+    <imageType>
+      <key>Box - Back</key>
+      <value>boxBack</value>
+    </imageType>
+    <imageType>
+      <key>Box - Back - Reconstructed</key>
+      <value>boxBack</value>
+    </imageType>
+    <imageType>
+      <key>Box - 3D</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Advertisement Flyer - Front</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Advertisement Flyer - Back</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Arcade - Cabinet</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Arcade - Circuit Board</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Arcade - Control Panel</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Arcade - Controls Information</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Arcade - Marquee</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Banner</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Cart - Front</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Cart - Back</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Cart - 3D</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Clear Logo</key>
+      <value>logo</value>
+    </imageType>
+    <imageType>
+      <key>Disc</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Fanart - Box - Front</key>
+      <value>boxFront</value>
+    </imageType>
+    <imageType>
+      <key>Fanart - Box - Back</key>
+      <value>boxBack</value>
+    </imageType>
+    <imageType>
+      <key>Fanart - Cart - Front</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Fanart - Cart - Back</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Fanart - Background</key>
+      <value>background</value>
+    </imageType>
+    <imageType>
+      <key>Fanart - Disc</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Screenshot - Gameplay</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Screenshot - Game Title</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Screenshot - Game Select</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Screenshot - Game Over</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Screenshot - High Scores</key>
+      <value></value>
+    </imageType>
+    <imageType>
+      <key>Steam Banner</key>
+      <value></value>
+    </imageType>
+</Translation>
