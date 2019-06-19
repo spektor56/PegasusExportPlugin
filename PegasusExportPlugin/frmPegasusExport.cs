@@ -44,6 +44,7 @@ namespace PegasusExportPlugin
 
         private async void BtnExport_Click(object sender, EventArgs e)
         {
+            
             if (!chkAssets.Checked && !chkRoms.Checked && !chkMetaData.Checked)
             {
                 MessageBox.Show("Please select at least one item to export.");
@@ -58,208 +59,248 @@ namespace PegasusExportPlugin
                 return;
             }
 
-            progressBar.Value = 0;
-            await Task.Run(() =>
+            var checkedItems = clbAssetList.CheckedItems;
+            if (checkedItems.Count < 1 && chkAssets.Checked)
             {
-                var progress = 0;
-                var dataManager = PluginHelper.DataManager;
-                var games = dataManager.GetAllGames();
-                var numberOfGames = games.Length;
-                var gamesByPlatform = games.GroupBy(game => game.Platform);
+                MessageBox.Show("You selected to export assets but no assets are selected.");
+                return;
+            }
 
-                Parallel.ForEach(gamesByPlatform, gamePlatform =>
+            btnExport.Enabled = false;
+
+            try
+            {
+                progressBar.Value = 0;
+                await Task.Run(() =>
                 {
-                    var platformFolderName = FileHelper.CoerceValidFileName(gamePlatform.First().Platform);
-                    var platformPath = Path.Combine(selectedFolder, platformFolderName);
-                    Directory.CreateDirectory(platformPath);
-                    var stringBuilder = new StringBuilder();
+                    var progress = 0;
+                    var dataManager = PluginHelper.DataManager;
+                    var games = dataManager.GetAllGames();
+                    var numberOfGames = games.Length;
+                    var gamesByPlatform = games.GroupBy(game => game.Platform);
 
-                    var imageList = new Dictionary<string, Dictionary<IGame, List<ImageDetails>>>();
-
-
-                    foreach (var game in gamePlatform)
+                    Parallel.ForEach(gamesByPlatform, gamePlatform =>
                     {
-                        Interlocked.Increment(ref progress);
+                        var platform = gamePlatform.First().Platform;
+                        var platformFolderName = FileHelper.CoerceValidFileName(platform);
+                        var platformPath = Path.Combine(selectedFolder, platformFolderName);
+                        Directory.CreateDirectory(platformPath);
+                        var metadataBuilder = new StringBuilder();
+                        metadataBuilder.AppendLine($"collection: {platform}");
+                        var gameMetadata = new StringBuilder();
+                        var imageList = new Dictionary<string, Dictionary<IGame, List<ImageDetails>>>();
 
-                        BeginInvoke(new MethodInvoker(() =>
+                        var fileExtensions = new HashSet<string>();
+                        foreach (var game in gamePlatform)
                         {
-                            progressBar.Value = (int)(progress / (double)numberOfGames * 100);
-                        }));
+                            if (chkAssets.Checked)
+                            {
+                                var mediaFolder = Path.Combine(platformPath, "media",
+                                    Path.GetFileNameWithoutExtension(game.ApplicationPath));
+                                Directory.CreateDirectory(mediaFolder);
+
+                                var images = game.GetAllImagesWithDetails();
+
+                                foreach (var image in images)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(image.FilePath) && File.Exists(image.FilePath))
+                                    {
+                                        if (_imageTypeDictionary.ContainsKey(image.ImageType))
+                                        {
+                                            var translatedImageType = _imageTypeDictionary[image.ImageType];
+                                            if (checkedItems.Contains(translatedImageType))
+                                            {
+                                                if (!imageList.ContainsKey(translatedImageType))
+                                                {
+                                                    imageList.Add(translatedImageType,
+                                                        new Dictionary<IGame, List<ImageDetails>>());
+                                                }
+
+                                                if (!imageList[translatedImageType].ContainsKey(game))
+                                                {
+                                                    imageList[translatedImageType].Add(game, new List<ImageDetails>());
+                                                }
+
+                                                imageList[translatedImageType][game].Add(image);
+                                            }
+                                        }
+
+                                    }
+                                }
+
+                                var video = game.GetVideoPath();
+                                if (!string.IsNullOrWhiteSpace(video) && File.Exists(video))
+                                {
+                                    File.Copy(video, Path.Combine(mediaFolder, "video" + Path.GetExtension(video)), true);
+                                }
+                            }
+
+                            if (chkRoms.Checked)
+                            {
+                                if (!string.IsNullOrWhiteSpace(game.ApplicationPath) && File.Exists(game.ApplicationPath))
+                                {
+                                    File.Copy(game.ApplicationPath,
+                                        Path.Combine(platformPath, Path.GetFileName(game.ApplicationPath)), true);
+                                    var fileExtension = Path.GetExtension(game.ApplicationPath);
+                                    if (!fileExtensions.Contains(fileExtension))
+                                    {
+                                        fileExtensions.Add(fileExtension);
+                                    }
+                                }
+                            }
+
+                            if (chkMetaData.Checked)
+                            {
+                                if (!string.IsNullOrWhiteSpace(game.Title))
+                                {
+                                    gameMetadata.AppendLine($"game: {game.Title}");
+
+                                    if (!string.IsNullOrWhiteSpace(game.ApplicationPath))
+                                    {
+                                        var file = Path.GetFileName(game.ApplicationPath);
+                                        gameMetadata.AppendLine($"file: {file}");
+                                    }
+
+                                    if (!string.IsNullOrWhiteSpace(game.Developer))
+                                    {
+                                        gameMetadata.AppendLine($"developer: {game.Developer}");
+                                    }
+
+                                    if (!string.IsNullOrWhiteSpace(game.Publisher))
+                                    {
+                                        gameMetadata.AppendLine($"publisher: {game.Publisher}");
+                                    }
+
+                                    foreach (var genre in game.Genres)
+                                    {
+                                        if (!string.IsNullOrWhiteSpace(genre))
+                                        {
+                                            gameMetadata.AppendLine($"genre: {genre}");
+                                        }
+                                    }
+
+                                    if (!string.IsNullOrWhiteSpace(game.Notes))
+                                    {
+                                        gameMetadata.AppendLine($"description: {game.Notes}");
+                                    }
+
+                                    if (game.ReleaseDate != null)
+                                    {
+                                        gameMetadata.AppendLine(
+                                            $"release: {((DateTime)game.ReleaseDate).ToString("yyyy-MM-dd")}");
+                                    }
+
+                                    if (game.CommunityStarRatingTotalVotes > 0)
+                                    {
+                                        var rating = (int)(game.CommunityStarRating / 5 * 100);
+                                        gameMetadata.AppendLine($"rating: {rating}");
+                                    }
+
+                                    gameMetadata.AppendLine();
+                                }
+                            }
+
+                            Interlocked.Increment(ref progress);
+
+                            BeginInvoke(new MethodInvoker(() =>
+                            {
+                                progressBar.Value = (int)(progress / (double)numberOfGames * 100);
+                            }));
+                        }
+
+                        double mode = 0;
+                        if (imageList.ContainsKey(PegasusImage.BoxFront))
+                        {
+                            var aspectRatioGroup = imageList[PegasusImage.BoxFront].SelectMany(game => game.Value).Select(image =>
+                            {
+                                using (var img = Image.FromFile(image.FilePath))
+                                {
+                                    return (double)img.Width / (double)img.Height;
+                                }
+
+                            }).GroupBy(aspectRatio => aspectRatio);
+                            int maxCount = aspectRatioGroup.Max(g => g.Count());
+                            mode = aspectRatioGroup.First(g => g.Count() == maxCount).Key;
+                        }
+
+
+                        foreach (var imageType in imageList)
+                        {
+                            var pegasusImageType = imageType.Key;
+                            foreach (var game in imageType.Value)
+                            {
+                                var mediaFolder = Path.Combine(platformPath, "media",
+                                    Path.GetFileNameWithoutExtension(game.Key.ApplicationPath));
+
+                                if (pegasusImageType == PegasusImage.BoxFront)
+                                {
+                                    var bestImage = game.Value.Aggregate((curMin, image) =>
+                                    {
+                                        if (curMin == null)
+                                        {
+                                            return image;
+                                        }
+                                        else
+                                        {
+                                            using (var imgMin = Image.FromFile(curMin.FilePath))
+                                            using (var img = Image.FromFile(image.FilePath))
+                                            {
+                                                if (Math.Abs(mode - ((double)img.Width / (double)img.Height)) <
+                                                    Math.Abs(mode - ((double)imgMin.Width / (double)imgMin.Height)))
+                                                {
+                                                    return image;
+                                                }
+                                                else
+                                                {
+                                                    return curMin;
+                                                }
+                                            }
+                                        }
+
+                                    });
+
+                                    File.Copy(bestImage.FilePath,
+                                        Path.Combine(mediaFolder, pegasusImageType + Path.GetExtension(bestImage.FilePath)),
+                                        true);
+                                }
+                                else
+                                {
+                                    foreach (var image in game.Value)
+                                    {
+                                        File.Copy(image.FilePath,
+                                            Path.Combine(mediaFolder, pegasusImageType + Path.GetExtension(image.FilePath)),
+                                            true);
+                                    }
+                                }
+                            }
+                        }
 
                         if (chkMetaData.Checked)
                         {
-                            if (string.IsNullOrWhiteSpace(game.Title))
+                            if (fileExtensions.Count > 0)
                             {
-                                continue;
+                                metadataBuilder.AppendLine(string.Format(@"extensions: {0}",
+                                    string.Join(", ", fileExtensions)));
                             }
 
-                            stringBuilder.AppendLine($"game: {game.Title}");
-
-                            if (!string.IsNullOrWhiteSpace(game.ApplicationPath))
-                            {
-                                var file = Path.GetFileName(game.ApplicationPath);
-                                stringBuilder.AppendLine($"file: {file}");
-                            }
-
-                            if (!string.IsNullOrWhiteSpace(game.Developer))
-                            {
-                                stringBuilder.AppendLine($"developer: {game.Developer}");
-                            }
-
-                            if (!string.IsNullOrWhiteSpace(game.Publisher))
-                            {
-                                stringBuilder.AppendLine($"publisher: {game.Publisher}");
-                            }
-
-                            foreach (var genre in game.Genres)
-                            {
-                                if (!string.IsNullOrWhiteSpace(genre))
-                                {
-                                    stringBuilder.AppendLine($"genre: {genre}");
-                                }
-                            }
-
-                            if (!string.IsNullOrWhiteSpace(game.Notes))
-                            {
-                                stringBuilder.AppendLine($"description: {game.Notes}");
-                            }
-
-                            if (game.ReleaseDate != null)
-                            {
-                                stringBuilder.AppendLine(
-                                    $"release: {((DateTime)game.ReleaseDate).ToString("yyyy-MM-dd")}");
-                            }
-
-                            if (game.CommunityStarRatingTotalVotes > 0)
-                            {
-                                var rating = (int)(game.CommunityStarRating / 5 * 100);
-                                stringBuilder.AppendLine($"rating: {rating}");
-                            }
-
-                            stringBuilder.AppendLine();
+                            metadataBuilder.AppendLine("");
+                            metadataBuilder.AppendLine(gameMetadata.ToString());
+                            File.WriteAllText(Path.Combine(platformPath, "metadata.pegasus.txt"), metadataBuilder.ToString());
                         }
-
-                        if (chkAssets.Checked)
-                        {
-                            var mediaFolder = Path.Combine(platformPath, "media",
-                                Path.GetFileNameWithoutExtension(game.ApplicationPath));
-                            Directory.CreateDirectory(mediaFolder);
-
-                            var images = game.GetAllImagesWithDetails();
-
-                            foreach (var image in images)
-                            {
-                                if (!string.IsNullOrWhiteSpace(image.FilePath) && File.Exists(image.FilePath))
-                                {
-                                    if (_imageTypeDictionary.ContainsKey(image.ImageType))
-                                    {
-                                        var translatedImageType = _imageTypeDictionary[image.ImageType];
-                                        if (!imageList.ContainsKey(translatedImageType))
-                                        {
-                                            imageList.Add(translatedImageType, new Dictionary<IGame, List<ImageDetails>>());
-                                        }
-                                        if (!imageList[translatedImageType].ContainsKey(game))
-                                        {
-                                            imageList[translatedImageType].Add(game, new List<ImageDetails>());
-                                        }
-
-                                        imageList[translatedImageType][game].Add(image);
-                                    }
-
-                                }
-                            }
-
-                            var video = game.GetVideoPath();
-                            if (!string.IsNullOrWhiteSpace(video) && File.Exists(video))
-                            {
-                                File.Copy(video, Path.Combine(mediaFolder, "video" + Path.GetExtension(video)), true);
-                            }
-                        }
-
-                        if (chkRoms.Checked)
-                        {
-                            File.Copy(game.ApplicationPath,
-                                Path.Combine(platformPath, Path.GetFileName(game.ApplicationPath)), true);
-                        }
-                    }
-
-                    double mode = 0;
-                    if (imageList.ContainsKey(PegasusImage.BoxFront))
-                    {
-                        var aspectRatioGroup = imageList[PegasusImage.BoxFront].SelectMany(game => game.Value).Select(image =>
-                        {
-                            using (var img = Image.FromFile(image.FilePath))
-                            {
-                                return (double)img.Width / (double)img.Height;
-                            }
-
-                        }).GroupBy(aspectRatio => aspectRatio);
-                        int maxCount = aspectRatioGroup.Max(g => g.Count());
-                        mode = aspectRatioGroup.First(g => g.Count() == maxCount).Key;
-                    }
-
-
-                    foreach (var imageType in imageList)
-                    {
-                        var pegasusImageType = imageType.Key;
-                        foreach (var game in imageType.Value)
-                        {
-                            var mediaFolder = Path.Combine(platformPath, "media",
-                                Path.GetFileNameWithoutExtension(game.Key.ApplicationPath));
-
-                            if (pegasusImageType == PegasusImage.BoxFront)
-                            {
-                                var bestImage = game.Value.Aggregate((curMin, image) =>
-                                {
-                                    if (curMin == null)
-                                    {
-                                        return image;
-                                    }
-                                    else
-                                    {
-                                        using (var imgMin = Image.FromFile(curMin.FilePath))
-                                        using (var img = Image.FromFile(image.FilePath))
-                                        {
-                                            if (Math.Abs(mode - ((double)img.Width / (double)img.Height)) <
-                                                Math.Abs(mode - ((double)imgMin.Width / (double)imgMin.Height)))
-                                            {
-                                                return image;
-                                            }
-                                            else
-                                            {
-                                                return curMin;
-                                            }
-                                        }
-                                    }
-
-                                });
-
-                                File.Copy(bestImage.FilePath,
-                                    Path.Combine(mediaFolder, pegasusImageType + Path.GetExtension(bestImage.FilePath)),
-                                    true);
-                            }
-                            else
-                            {
-                                foreach (var image in game.Value)
-                                {
-                                    File.Copy(image.FilePath,
-                                        Path.Combine(mediaFolder, pegasusImageType + Path.GetExtension(image.FilePath)),
-                                        true);
-                                }
-                            }
-                        }
-                    }
-
-
-                    if (chkMetaData.Checked)
-                    {
-                        File.WriteAllText(Path.Combine(platformPath, "metadata.pegasus.txt"), stringBuilder.ToString());
-                    }
+                    });
                 });
-
-                
-            });
-            progressBar.Value = 100;
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+                throw;
+            }
+            finally
+            {
+                btnExport.Enabled = true;
+                progressBar.Value = 100;
+            }
+            
             MessageBox.Show("Done!");
         }
 
@@ -299,7 +340,7 @@ namespace PegasusExportPlugin
         {
             var translationTable = XElement.Load(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"translationTable.xml"));
 
-            var imageTypes = translationTable.Descendants("imageType").Select(item =>  item);
+            var imageTypes = translationTable.Descendants("asset").Select(item =>  item);
             foreach (var imageType in imageTypes)
             {
                 if (imageType.Element("key") != null && imageType.Element("value") != null &&
@@ -311,7 +352,14 @@ namespace PegasusExportPlugin
                 }
             }
 
-            
+            clbAssetList.DataSource = _imageTypeDictionary.Select(image => image.Value).Distinct().ToArray();
+            for (int i = 0; i < clbAssetList.Items.Count; i++)
+            {
+                clbAssetList.SetItemChecked(i,true);
+            }
+
+
+
         }
     }
 }
