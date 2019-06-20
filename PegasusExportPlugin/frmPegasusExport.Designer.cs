@@ -57,6 +57,8 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.radCopyAssets = new System.Windows.Forms.RadioButton();
+            this.radLink = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -136,9 +138,9 @@
             this.chkRoms.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkRoms.Location = new System.Drawing.Point(212, 19);
             this.chkRoms.Name = "chkRoms";
-            this.chkRoms.Size = new System.Drawing.Size(86, 17);
+            this.chkRoms.Size = new System.Drawing.Size(111, 17);
             this.chkRoms.TabIndex = 6;
-            this.chkRoms.Text = "Export Roms";
+            this.chkRoms.Text = "Export Application";
             this.chkRoms.UseVisualStyleBackColor = true;
             // 
             // chkAssets
@@ -158,7 +160,7 @@
             this.groupBox1.Controls.Add(this.btnUp);
             this.groupBox1.Controls.Add(this.lbImagePriority);
             this.groupBox1.Controls.Add(this.btnDown);
-            this.groupBox1.Location = new System.Drawing.Point(232, 208);
+            this.groupBox1.Location = new System.Drawing.Point(290, 208);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(211, 125);
             this.groupBox1.TabIndex = 9;
@@ -214,22 +216,26 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.radLink);
+            this.groupBox2.Controls.Add(this.radCopyAssets);
             this.groupBox2.Controls.Add(this.clbAssetList);
             this.groupBox2.Location = new System.Drawing.Point(9, 208);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(198, 148);
+            this.groupBox2.Size = new System.Drawing.Size(275, 148);
             this.groupBox2.TabIndex = 11;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Asset Export";
             // 
             // clbAssetList
             // 
+            this.clbAssetList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.clbAssetList.CheckOnClick = true;
-            this.clbAssetList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.clbAssetList.FormattingEnabled = true;
             this.clbAssetList.Location = new System.Drawing.Point(3, 16);
             this.clbAssetList.Name = "clbAssetList";
-            this.clbAssetList.Size = new System.Drawing.Size(192, 129);
+            this.clbAssetList.Size = new System.Drawing.Size(168, 124);
             this.clbAssetList.TabIndex = 0;
             // 
             // radAutoChoose
@@ -248,7 +254,7 @@
             // 
             this.groupBox3.Controls.Add(this.radAutoChoose);
             this.groupBox3.Controls.Add(this.radChoose);
-            this.groupBox3.Location = new System.Drawing.Point(449, 208);
+            this.groupBox3.Location = new System.Drawing.Point(507, 208);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(114, 70);
             this.groupBox3.TabIndex = 12;
@@ -361,7 +367,7 @@
             this.groupBox5.Controls.Add(this.chkRoms);
             this.groupBox5.Location = new System.Drawing.Point(3, 3);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(300, 44);
+            this.groupBox5.Size = new System.Drawing.Size(429, 44);
             this.groupBox5.TabIndex = 13;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Global Override Settings";
@@ -382,6 +388,28 @@
             this.panel1.Size = new System.Drawing.Size(760, 364);
             this.panel1.TabIndex = 14;
             // 
+            // radCopyAssets
+            // 
+            this.radCopyAssets.AutoSize = true;
+            this.radCopyAssets.Checked = true;
+            this.radCopyAssets.Location = new System.Drawing.Point(177, 16);
+            this.radCopyAssets.Name = "radCopyAssets";
+            this.radCopyAssets.Size = new System.Drawing.Size(83, 17);
+            this.radCopyAssets.TabIndex = 1;
+            this.radCopyAssets.TabStop = true;
+            this.radCopyAssets.Text = "Copy Assets";
+            this.radCopyAssets.UseVisualStyleBackColor = true;
+            // 
+            // radLink
+            // 
+            this.radLink.AutoSize = true;
+            this.radLink.Location = new System.Drawing.Point(177, 39);
+            this.radLink.Name = "radLink";
+            this.radLink.Size = new System.Drawing.Size(91, 17);
+            this.radLink.TabIndex = 2;
+            this.radLink.Text = "Link to Assets";
+            this.radLink.UseVisualStyleBackColor = true;
+            // 
             // frmPegasusExport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -401,6 +429,7 @@
             this.Load += new System.EventHandler(this.FrmPegasusExport_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlatforms)).EndInit();
@@ -444,5 +473,7 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn colMetaData;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colAssets;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colApplication;
+        private System.Windows.Forms.RadioButton radLink;
+        private System.Windows.Forms.RadioButton radCopyAssets;
     }
 }

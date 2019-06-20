@@ -103,7 +103,8 @@ namespace PegasusExportPlugin
                         Directory.CreateDirectory(platformPath);
                         var metadataBuilder = new StringBuilder();
                         metadataBuilder.AppendLine($"collection: {platform}");
-                        var gameMetadata = new StringBuilder();
+                        var gamesMetadata = new Dictionary<IGame, StringBuilder>();
+                        
                         var imageList = new Dictionary<string, Dictionary<IGame, List<ImageDetails>>>();
 
                         var fileExtensions = new HashSet<string>();
@@ -171,14 +172,16 @@ namespace PegasusExportPlugin
 
                             if (chkMetaData.Checked && platformMetadataExportList.Contains(platform))
                             {
+                                var gameMetadataBuilder = new StringBuilder();
+
                                 if (!string.IsNullOrWhiteSpace(game.Title))
                                 {
-                                    gameMetadata.AppendLine($"game: {game.Title}");
+                                    gameMetadataBuilder.AppendLine($"game: {game.Title}");
 
                                     if (!string.IsNullOrWhiteSpace(game.ApplicationPath))
                                     {
                                         var file = Path.GetFileName(game.ApplicationPath);
-                                        gameMetadata.AppendLine($"file: {file}");
+                                        gameMetadataBuilder.AppendLine($"file: {file}");
 
                                         var fileExtension = Path.GetExtension(file).Replace(".","");
                                         if (!fileExtensions.Contains(fileExtension))
@@ -189,40 +192,39 @@ namespace PegasusExportPlugin
 
                                     if (!string.IsNullOrWhiteSpace(game.Developer))
                                     {
-                                        gameMetadata.AppendLine($"developer: {game.Developer}");
+                                        gameMetadataBuilder.AppendLine($"developer: {game.Developer}");
                                     }
 
                                     if (!string.IsNullOrWhiteSpace(game.Publisher))
                                     {
-                                        gameMetadata.AppendLine($"publisher: {game.Publisher}");
+                                        gameMetadataBuilder.AppendLine($"publisher: {game.Publisher}");
                                     }
 
                                     foreach (var genre in game.Genres)
                                     {
                                         if (!string.IsNullOrWhiteSpace(genre))
                                         {
-                                            gameMetadata.AppendLine($"genre: {genre}");
+                                            gameMetadataBuilder.AppendLine($"genre: {genre}");
                                         }
                                     }
 
                                     if (!string.IsNullOrWhiteSpace(game.Notes))
                                     {
-                                        gameMetadata.AppendLine($"description: {game.Notes}");
+                                        gameMetadataBuilder.AppendLine($"description: {game.Notes}");
                                     }
 
                                     if (game.ReleaseDate != null)
                                     {
-                                        gameMetadata.AppendLine(
+                                        gameMetadataBuilder.AppendLine(
                                             $"release: {((DateTime)game.ReleaseDate).ToString("yyyy-MM-dd")}");
                                     }
 
                                     if (game.CommunityStarRatingTotalVotes > 0)
                                     {
                                         var rating = (int)(game.CommunityStarRating / 5 * 100);
-                                        gameMetadata.AppendLine($"rating: {rating}");
+                                        gameMetadataBuilder.AppendLine($"rating: {rating}");
                                     }
-
-                                    gameMetadata.AppendLine();
+                                    gamesMetadata.Add(game, gameMetadataBuilder);
                                 }
                             }
 
@@ -285,16 +287,32 @@ namespace PegasusExportPlugin
 
                                     });
 
-                                    File.Copy(bestImage.FilePath,
-                                        Path.Combine(mediaFolder, pegasusImageType + Path.GetExtension(bestImage.FilePath)),
-                                        true);
+
+                                    if (radCopyAssets.Checked)
+                                    {
+                                        File.Copy(bestImage.FilePath,
+                                            Path.Combine(mediaFolder, pegasusImageType + Path.GetExtension(bestImage.FilePath)),
+                                            true);
+                                    }
+                                    else
+                                    {
+                                        gamesMetadata[game.Key].AppendLine($@"assets.{pegasusImageType}: {bestImage.FilePath}");
+                                    }
+                                    
                                 }
                                 else
                                 {
                                     var firstImage = game.Value.First();
-                                    File.Copy(firstImage.FilePath,
-                                        Path.Combine(mediaFolder, pegasusImageType + Path.GetExtension(firstImage.FilePath)),
-                                        true);
+                                    if (radCopyAssets.Checked)
+                                    {
+                                        File.Copy(firstImage.FilePath,
+                                            Path.Combine(mediaFolder, pegasusImageType + Path.GetExtension(firstImage.FilePath)),
+                                            true);
+                                    }
+                                    else
+                                    {
+                                        gamesMetadata[game.Key].AppendLine($@"assets.{pegasusImageType}: {firstImage.FilePath}");
+                                    }
                                 }
                             }
                         }
@@ -308,7 +326,7 @@ namespace PegasusExportPlugin
                             }
 
                             metadataBuilder.AppendLine("");
-                            metadataBuilder.AppendLine(gameMetadata.ToString());
+                            metadataBuilder.AppendLine(string.Join(Environment.NewLine, gamesMetadata.Select(item => item.Value.ToString())));
                             File.WriteAllText(Path.Combine(platformPath, "metadata.pegasus.txt"), metadataBuilder.ToString());
                         }
                     });
