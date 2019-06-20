@@ -55,6 +55,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\DataGridViewCheckBoxColumnHeaderCell.cs" />
+    <Compile Include="Controls\DataGridViewCheckBoxColumnHeaderCellEventArgs.cs" />
+    <Compile Include="Controls\DataGridViewHeaderCheckBoxColumn.cs" />
+    <Compile Include="Controls\HeaderCheckBoxBehaviour.cs" />
     <Compile Include="frmPegasusExport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -67,6 +71,7 @@
     <Compile Include="frmSettings.Designer.cs">
       <DependentUpon>frmSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Launchbox\PlatformSetting.cs" />
     <Compile Include="Pegasus\PegasusImage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

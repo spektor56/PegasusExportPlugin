@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -9,12 +10,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using PegasusExportPlugin.Controls;
+using PegasusExportPlugin.Launchbox;
 using PegasusExportPlugin.Pegasus;
 using Unbroken;
-using Unbroken.LaunchBox.Data;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
-using Unbroken.LaunchBox.Properties;
 using Resources = PegasusExportPlugin.Properties.Resources;
 
 namespace PegasusExportPlugin
@@ -25,6 +26,8 @@ namespace PegasusExportPlugin
         {
             InitializeComponent();
         }
+
+        private IDataManager _dataManager = PluginHelper.DataManager;
 
         private Dictionary<string, string> _imageTypeDictionary = new Dictionary<string,string>();
         public string Caption => "Pegasus Export";
@@ -44,7 +47,7 @@ namespace PegasusExportPlugin
 
         private async void BtnExport_Click(object sender, EventArgs e)
         {
-            
+       
             if (!chkAssets.Checked && !chkRoms.Checked && !chkMetaData.Checked)
             {
                 MessageBox.Show("Please select at least one item to export.");
@@ -66,6 +69,14 @@ namespace PegasusExportPlugin
                 return;
             }
 
+            var platformSettings = (BindingList<PlatformSetting>)dgvPlatforms.DataSource;
+            var platformsToExport = platformSettings.Where(platform => platform.Selected && ((platform.ExportApplication && chkRoms.Checked) || (platform.ExportAssets && chkAssets.Checked) || (platform.ExportMetadata && chkMetaData.Checked)));
+            if(!platformsToExport.Any())
+            {
+                MessageBox.Show("You didn't select any platforms/data to export.");
+                return;
+            }
+
             btnExport.Enabled = false;
 
             try
@@ -74,8 +85,13 @@ namespace PegasusExportPlugin
                 await Task.Run(() =>
                 {
                     var progress = 0;
-                    var dataManager = PluginHelper.DataManager;
-                    var games = dataManager.GetAllGames();
+
+                    var platformList = new HashSet<string>(platformsToExport.Select(platform => platform.Name));
+                    var platformAssetExportList = new HashSet<string> (platformsToExport.Where(platform => platform.ExportAssets).Select(platform => platform.Name));
+                    var platformMetadataExportList = new HashSet<string>(platformsToExport.Where(platform => platform.ExportMetadata).Select(platform => platform.Name));
+                    var platformApplicationExportList = new HashSet<string>(platformsToExport.Where(platform => platform.ExportApplication).Select(platform => platform.Name));
+
+                    var games = _dataManager.GetAllGames().Where(game => platformList.Contains(game.Platform)).ToArray();
                     var numberOfGames = games.Length;
                     var gamesByPlatform = games.GroupBy(game => game.Platform);
 
@@ -93,7 +109,7 @@ namespace PegasusExportPlugin
                         var fileExtensions = new HashSet<string>();
                         foreach (var game in gamePlatform)
                         {
-                            if (chkAssets.Checked)
+                            if (chkAssets.Checked && platformAssetExportList.Contains(platform))
                             {
                                 var mediaFolder = Path.Combine(platformPath, "media",
                                     Path.GetFileNameWithoutExtension(game.ApplicationPath));
@@ -139,7 +155,7 @@ namespace PegasusExportPlugin
                                 }
                             }
 
-                            if (chkRoms.Checked)
+                            if (chkRoms.Checked && platformApplicationExportList.Contains(platform))
                             {
                                 if (!string.IsNullOrWhiteSpace(game.ApplicationPath) && File.Exists(game.ApplicationPath))
                                 {
@@ -153,7 +169,7 @@ namespace PegasusExportPlugin
                                 }
                             }
 
-                            if (chkMetaData.Checked)
+                            if (chkMetaData.Checked && platformMetadataExportList.Contains(platform))
                             {
                                 if (!string.IsNullOrWhiteSpace(game.Title))
                                 {
@@ -283,7 +299,7 @@ namespace PegasusExportPlugin
                             }
                         }
 
-                        if (chkMetaData.Checked)
+                        if (chkMetaData.Checked && platformMetadataExportList.Contains(platform))
                         {
                             if (fileExtensions.Count > 0)
                             {
@@ -366,7 +382,12 @@ namespace PegasusExportPlugin
                 clbAssetList.SetItemChecked(i,true);
             }
 
+            var platformList = new BindingList<Launchbox.PlatformSetting>(_dataManager.GetAllPlatforms().Select(platform => new Launchbox.PlatformSetting() { Name = platform.Name }).ToList());
+            dgvPlatforms.AutoGenerateColumns = false;
+            dgvPlatforms.DataSource = platformList;
 
+            
+            ((DataGridViewCheckBoxColumnHeaderCell)colSelected.HeaderCell).Select(true);
 
         }
     }
