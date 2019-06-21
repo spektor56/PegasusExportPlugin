@@ -35,7 +35,7 @@
             this.btnBrowse = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.chkMetaData = new System.Windows.Forms.CheckBox();
-            this.chkRoms = new System.Windows.Forms.CheckBox();
+            this.chkApplication = new System.Windows.Forms.CheckBox();
             this.chkAssets = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnUp = new System.Windows.Forms.Button();
@@ -133,15 +133,15 @@
             // 
             // chkRoms
             // 
-            this.chkRoms.AutoSize = true;
-            this.chkRoms.Checked = true;
-            this.chkRoms.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkRoms.Location = new System.Drawing.Point(212, 19);
-            this.chkRoms.Name = "chkRoms";
-            this.chkRoms.Size = new System.Drawing.Size(111, 17);
-            this.chkRoms.TabIndex = 6;
-            this.chkRoms.Text = "Export Application";
-            this.chkRoms.UseVisualStyleBackColor = true;
+            this.chkApplication.AutoSize = true;
+            this.chkApplication.Checked = true;
+            this.chkApplication.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkApplication.Location = new System.Drawing.Point(212, 19);
+            this.chkApplication.Name = "chkRoms";
+            this.chkApplication.Size = new System.Drawing.Size(111, 17);
+            this.chkApplication.TabIndex = 6;
+            this.chkApplication.Text = "Export Application";
+            this.chkApplication.UseVisualStyleBackColor = true;
             // 
             // chkAssets
             // 
@@ -364,7 +364,7 @@
             // 
             this.groupBox5.Controls.Add(this.chkMetaData);
             this.groupBox5.Controls.Add(this.chkAssets);
-            this.groupBox5.Controls.Add(this.chkRoms);
+            this.groupBox5.Controls.Add(this.chkApplication);
             this.groupBox5.Location = new System.Drawing.Point(3, 3);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(429, 44);
@@ -451,7 +451,7 @@
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.CheckBox chkMetaData;
-        private System.Windows.Forms.CheckBox chkRoms;
+        private System.Windows.Forms.CheckBox chkApplication;
         private System.Windows.Forms.CheckBox chkAssets;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ListBox lbImagePriority;

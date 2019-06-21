@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PegasusExportPlugin.Pegasus
 {
-    public static class PegasusImage
+    public static class PegasusAssetType
     {
         public static string BoxFront => "boxFront";
         public static string BoxBack => "boxBack";
@@ -15,5 +15,6 @@ namespace PegasusExportPlugin.Pegasus
         public static string Cartridge => "cartridge";
         public static string Logo => "logo";
         public static string Background => "background";
+        public static string Video => "video";
     }
 }
