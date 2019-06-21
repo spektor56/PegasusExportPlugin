@@ -75,7 +75,7 @@ namespace PegasusExportPlugin
                 MessageBox.Show("You didn't select any platforms/data to export.");
                 return;
             }
-
+            
             btnExport.Enabled = false;
 
             try
@@ -84,6 +84,9 @@ namespace PegasusExportPlugin
                 bool exportMetadata = chkMetaData.Checked;
                 bool exportApplication = chkApplication.Checked;
                 bool copyAssets = radCopyAssets.Checked;
+                bool copyApplication = radCopyApplication.Checked;
+                bool assetsAbsolutePath = radAbsoluteAssets.Checked;
+                bool applicationAbsolutePath = radAbsoluteApplication.Checked;
 
                 progressBar.Value = 0;
                 await Task.Run(() =>
@@ -129,7 +132,23 @@ namespace PegasusExportPlugin
 
                                     if (!string.IsNullOrWhiteSpace(game.ApplicationPath))
                                     {
-                                        var file = Path.GetFileName(game.ApplicationPath);
+                                        string file;
+                                        if (copyApplication)
+                                        {
+                                            file = Path.GetFileName(game.ApplicationPath);
+                                        }
+                                        else
+                                        {
+                                            if(applicationAbsolutePath)
+                                            {
+                                                file = game.ApplicationPath;
+                                            }
+                                            else
+                                            {
+                                                file = game.ApplicationPath;
+                                            }
+                                            //var test = Path.GetRelativePath();
+                                        }
                                         gameMetadataBuilder.AppendLine($"file: {file}");
 
                                         var fileExtension = Path.GetExtension(file).Replace(".", "");
@@ -253,7 +272,7 @@ namespace PegasusExportPlugin
                             }
 
                             //Export Roms
-                            if (exportApplication && platformApplicationExportList.Contains(platform))
+                            if (copyApplication && exportApplication && platformApplicationExportList.Contains(platform))
                             {
                                 if (!string.IsNullOrWhiteSpace(game.ApplicationPath) && File.Exists(game.ApplicationPath))
                                 {
