@@ -197,10 +197,15 @@ namespace PegasusExportPlugin
                                             $"release: {((DateTime)game.ReleaseDate).ToString("yyyy-MM-dd")}");
                                     }
 
-                                    if (game.CommunityStarRatingTotalVotes > 0)
+                                    if(game.StarRatingFloat > 0)
+                                    {
+                                        var rating = (int)(game.StarRatingFloat / 5 * 100);
+                                        gameMetadataBuilder.AppendLine($"rating: {rating}%");
+                                    }
+                                    else if (game.CommunityStarRatingTotalVotes > 0)
                                     {
                                         var rating = (int)(game.CommunityStarRating / 5 * 100);
-                                        gameMetadataBuilder.AppendLine($"rating: {rating}");
+                                        gameMetadataBuilder.AppendLine($"rating: {rating}%");
                                     }
                                     gamesMetadata.Add(game, gameMetadataBuilder);
                                 }
