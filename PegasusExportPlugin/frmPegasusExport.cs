@@ -45,6 +45,20 @@ namespace PegasusExportPlugin
             Show();
         }
 
+        public string GetRelativePath(string relativeTo, string path)
+        {
+            if(!relativeTo.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            {
+                relativeTo += Path.DirectorySeparatorChar;
+            }
+            var uri = new Uri(relativeTo);
+            var rel = Uri.UnescapeDataString(uri.MakeRelativeUri(new Uri(path)).ToString()).Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            if (rel.Contains(Path.DirectorySeparatorChar.ToString()) == false)
+            {
+                rel = $".{ Path.DirectorySeparatorChar }{ rel }";
+            }
+            return rel;
+        }
         private async void BtnExport_Click(object sender, EventArgs e)
         {
             if (!chkAssets.Checked && !chkApplication.Checked && !chkMetaData.Checked)
@@ -87,7 +101,7 @@ namespace PegasusExportPlugin
                 bool copyApplication = radCopyApplication.Checked;
                 bool assetsAbsolutePath = radAbsoluteAssets.Checked;
                 bool applicationAbsolutePath = radAbsoluteApplication.Checked;
-
+                
                 progressBar.Value = 0;
                 await Task.Run(() =>
                 {
@@ -141,13 +155,12 @@ namespace PegasusExportPlugin
                                         {
                                             if(applicationAbsolutePath)
                                             {
-                                                file = game.ApplicationPath;
+                                                file = Path.GetFullPath(game.ApplicationPath);
                                             }
                                             else
                                             {
-                                                file = game.ApplicationPath;
+                                                file = GetRelativePath(platformPath, Path.GetFullPath(game.ApplicationPath)); 
                                             }
-                                            //var test = Path.GetRelativePath();
                                         }
                                         gameMetadataBuilder.AppendLine($"file: {file}");
 
