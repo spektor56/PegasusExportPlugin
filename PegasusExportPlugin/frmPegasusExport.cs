@@ -34,7 +34,15 @@ namespace PegasusExportPlugin
 
         public string GetRelativePath(string relativeTo, string path)
         {
-            path = Path.GetFullPath(path);
+            try
+            {
+                path = Path.GetFullPath(path);
+            }
+            catch(Exception)
+            {
+                return path;
+            }
+            
             if (!relativeTo.EndsWith(Path.DirectorySeparatorChar))
             {
                 relativeTo += Path.DirectorySeparatorChar;
@@ -80,7 +88,6 @@ namespace PegasusExportPlugin
             }
             
             btnExport.Enabled = false;
-
             try
             {
                 bool exportAssetsChecked = chkAssets.Checked;
