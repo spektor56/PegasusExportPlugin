@@ -103,7 +103,7 @@ namespace PegasusExportPlugin
 
                     var games = _dataManager.GetAllGames().Where(game => platformList.Contains(game.Platform)).ToArray();
                     var numberOfGames = games.Length;
-                    var gamesByPlatform = games.GroupBy(game => game.Platform);
+                    var gamesByPlatform = games.OrderBy(game => game.SortTitleOrTitle).GroupBy(game => game.Platform);
 
                     Parallel.ForEach(gamesByPlatform, gamePlatform =>
                     {
