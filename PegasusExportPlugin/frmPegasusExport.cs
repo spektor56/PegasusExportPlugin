@@ -16,11 +16,11 @@ using PegasusExportPlugin.Pegasus;
 using Unbroken;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
-using Resources = PegasusExportPlugin.Properties.Resources;
+using PegasusExportPlugin.Extensions;
 
 namespace PegasusExportPlugin
 {
-    public partial class frmPegasusExport : Form, ISystemMenuItemPlugin
+    public partial class frmPegasusExport : Form
     {
         public frmPegasusExport()
         {
@@ -30,27 +30,16 @@ namespace PegasusExportPlugin
         private IDataManager _dataManager = PluginHelper.DataManager;
 
         private Dictionary<string, string> _imageTypeDictionary = new Dictionary<string,string>();
-        public string Caption => "Pegasus Export";
-
-        public Image IconImage => Resources.favicon96;
-
-        public bool ShowInLaunchBox => true;
-
-        public bool ShowInBigBox => false;
-
-        public bool AllowInBigBoxWhenLocked => false;
-
-        public void OnSelected()
-        {
-            Show();
-        }
+       
 
         public string GetRelativePath(string relativeTo, string path)
         {
-            if(!relativeTo.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            path = Path.GetFullPath(path);
+            if (!relativeTo.EndsWith(Path.DirectorySeparatorChar))
             {
                 relativeTo += Path.DirectorySeparatorChar;
             }
+            
             var uri = new Uri(relativeTo);
             var rel = Uri.UnescapeDataString(uri.MakeRelativeUri(new Uri(path)).ToString()).Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             if (rel.Contains(Path.DirectorySeparatorChar.ToString()) == false)
@@ -94,9 +83,9 @@ namespace PegasusExportPlugin
 
             try
             {
-                bool exportAssets = chkAssets.Checked;
-                bool exportMetadata = chkMetaData.Checked;
-                bool exportApplication = chkApplication.Checked;
+                bool exportAssetsChecked = chkAssets.Checked;
+                bool exportMetadataChecked = chkMetaData.Checked;
+                bool exportApplicationChecked = chkApplication.Checked;
                 bool copyAssets = radCopyAssets.Checked;
                 bool copyApplication = radCopyApplication.Checked;
                 bool assetsAbsolutePath = radAbsoluteAssets.Checked;
@@ -123,7 +112,15 @@ namespace PegasusExportPlugin
                         var platformPath = Path.Combine(selectedFolder, platformFolderName);
                         Directory.CreateDirectory(platformPath);
                         var metadataBuilder = new StringBuilder();
-                        metadataBuilder.AppendLine($"collection: {platform}");
+
+                        bool exportAssets = exportAssetsChecked && platformAssetExportList.Contains(platform);
+                        bool exportApplication = exportApplicationChecked && platformApplicationExportList.Contains(platform);
+                        bool exportMetadata = (exportMetadataChecked && platformMetadataExportList.Contains(platform)) || (exportApplication && !copyApplication) || (exportAssets && !copyAssets);
+
+                        if (exportMetadata)
+                        {
+                            metadataBuilder.AppendLine($"collection: {platform}");
+                        }
                         var gamesMetadata = new Dictionary<IGame, StringBuilder>();
                         
                         var imageList = new Dictionary<string, Dictionary<IGame, List<ImageDetail>>>();
@@ -136,7 +133,7 @@ namespace PegasusExportPlugin
 
                         foreach (var game in gamePlatform)
                         {
-                            if ((exportMetadata  && platformMetadataExportList.Contains(platform)) || (exportAssets && platformAssetExportList.Contains(platform) && !copyAssets))
+                            if (exportMetadata)
                             {
                                 var gameMetadataBuilder = new StringBuilder();
 
@@ -159,7 +156,7 @@ namespace PegasusExportPlugin
                                             }
                                             else
                                             {
-                                                file = GetRelativePath(platformPath, Path.GetFullPath(game.ApplicationPath)); 
+                                                file = GetRelativePath(platformPath, game.ApplicationPath); 
                                             }
                                         }
                                         gameMetadataBuilder.AppendLine($"file: {file}");
@@ -209,7 +206,7 @@ namespace PegasusExportPlugin
                                 }
                             }
 
-                            if (exportAssets && platformAssetExportList.Contains(platform))
+                            if (exportAssets)
                             {
                                 var mediaFolder = Path.Combine(platformPath, "media",
                                     Path.GetFileNameWithoutExtension(game.ApplicationPath));
@@ -278,14 +275,21 @@ namespace PegasusExportPlugin
                                         }
                                         else
                                         {
-                                            gamesMetadata[game].AppendLine($@"assets.{PegasusAssetType.Video}: {video}");
+                                            if (assetsAbsolutePath)
+                                            {
+                                                gamesMetadata[game].AppendLine($@"assets.{PegasusAssetType.Video}: {Path.GetFullPath(video)}");
+                                            }
+                                            else
+                                            {
+                                                gamesMetadata[game].AppendLine($@"assets.{PegasusAssetType.Video}: {GetRelativePath(platformPath, video)}");
+                                            }
                                         }
                                     }
                                 }
                             }
 
                             //Export Roms
-                            if (copyApplication && exportApplication && platformApplicationExportList.Contains(platform))
+                            if (copyApplication && exportApplication)
                             {
                                 if (!string.IsNullOrWhiteSpace(game.ApplicationPath) && File.Exists(game.ApplicationPath))
                                 {
@@ -303,7 +307,7 @@ namespace PegasusExportPlugin
 
                             BeginInvoke(new MethodInvoker(() =>
                             {
-                                progressBar.Value = (int)(progress / (double)numberOfGames * 100);
+                                progressBar.Value = (int)((progress / (double)numberOfGames) * 100);
                             }));
                         }
                               
@@ -316,16 +320,18 @@ namespace PegasusExportPlugin
                                 var mediaFolder = Path.Combine(platformPath, "media",
                                     Path.GetFileNameWithoutExtension(game.Key.ApplicationPath));
 
+                                ImageDetails exportImage;
+
                                 if (pegasusImageType == PegasusAssetType.BoxFront)
                                 {
-                                    ImageDetails bestImage = game.Value.First().Image;
+                                    exportImage = game.Value.First().Image;
                                     double? minDifference = null;
                                     foreach(var imageDetail in game.Value)
                                     {
                                         var difference = Math.Abs(boxFrontAspectRatioMode - imageDetail.AspectRatio);
                                         if(difference == 0)
                                         {
-                                            bestImage = imageDetail.Image;
+                                            exportImage = imageDetail.Image;
                                             break;
                                         }
                                         else
@@ -333,44 +339,39 @@ namespace PegasusExportPlugin
                                             if(minDifference is null || difference < minDifference)
                                             {
                                                 minDifference = difference;
-                                                bestImage = imageDetail.Image;
+                                                exportImage = imageDetail.Image;
                                             }
                                         }
                                     }
-                                   
-                                    if (copyAssets)
-                                    {
-                                        Directory.CreateDirectory(mediaFolder);
-                                        File.Copy(bestImage.FilePath,
-                                            Path.Combine(mediaFolder, pegasusImageType + Path.GetExtension(bestImage.FilePath)),
-                                            true);
-                                    }
-                                    else
-                                    {
-                                        gamesMetadata[game.Key].AppendLine($@"assets.{pegasusImageType}: {bestImage.FilePath}");
-                                    }
-                                    
                                 }
                                 else
                                 {
-                                    var firstImage = game.Value.First().Image;
-                                    if (copyAssets)
+                                    exportImage = game.Value.First().Image;
+                                }
+
+                                if (copyAssets)
+                                {
+                                    Directory.CreateDirectory(mediaFolder);
+                                    File.Copy(exportImage.FilePath,
+                                        Path.Combine(mediaFolder, pegasusImageType + Path.GetExtension(exportImage.FilePath)),
+                                        true);
+                                }
+                                else
+                                {
+                                    if (assetsAbsolutePath)
                                     {
-                                        Directory.CreateDirectory(mediaFolder);
-                                        File.Copy(firstImage.FilePath,
-                                            Path.Combine(mediaFolder, pegasusImageType + Path.GetExtension(firstImage.FilePath)),
-                                            true);
+                                        gamesMetadata[game.Key].AppendLine($@"assets.{pegasusImageType}: {Path.GetFullPath(exportImage.FilePath)}");
                                     }
                                     else
                                     {
-                                        gamesMetadata[game.Key].AppendLine($@"assets.{pegasusImageType}: {firstImage.FilePath}");
+                                        gamesMetadata[game.Key].AppendLine($@"assets.{pegasusImageType}: {GetRelativePath(platformPath,exportImage.FilePath)}");
                                     }
                                 }
                             }
                         }
 
                         //Export Metadata
-                        if ((exportMetadata && platformMetadataExportList.Contains(platform)) || (exportAssets && platformAssetExportList.Contains(platform) && !copyAssets))
+                        if (exportMetadata)
                         {
                             if (fileExtensions.Count > 0)
                             {
@@ -460,6 +461,26 @@ namespace PegasusExportPlugin
             
             ((DataGridViewCheckBoxColumnHeaderCell)colSelected.HeaderCell).Select(true);
 
+        }
+
+        private void RadLinkAssets_CheckedChanged(object sender, EventArgs e)
+        {
+            var radChecked = radLinkAssets.Checked;
+            foreach (var control in gbAssetPath.Controls)
+            {
+                var radio = control as RadioButton;
+                radio.Enabled = radChecked;
+            }
+        }
+
+        private void RadLinkApplication_CheckedChanged(object sender, EventArgs e)
+        {
+            var radChecked = radLinkApplication.Checked;
+            foreach(var control in gbApplicationPath.Controls)
+            {
+                var radio = control as RadioButton;
+                radio.Enabled = radChecked;
+            }
         }
     }
 }

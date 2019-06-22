@@ -43,6 +43,9 @@
             this.btnDown = new System.Windows.Forms.Button();
             this.radChoose = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.gbAssetPath = new System.Windows.Forms.GroupBox();
+            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.radAbsoluteAssets = new System.Windows.Forms.RadioButton();
             this.radLinkAssets = new System.Windows.Forms.RadioButton();
             this.radCopyAssets = new System.Windows.Forms.RadioButton();
             this.clbAssetList = new System.Windows.Forms.CheckedListBox();
@@ -60,24 +63,21 @@
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.gbApplicationPath = new System.Windows.Forms.GroupBox();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radAbsoluteApplication = new System.Windows.Forms.RadioButton();
             this.radLinkApplication = new System.Windows.Forms.RadioButton();
             this.radCopyApplication = new System.Windows.Forms.RadioButton();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.radAbsoluteApplication = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radAbsoluteAssets = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.gbAssetPath.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlatforms)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox6.SuspendLayout();
-            this.groupBox7.SuspendLayout();
-            this.groupBox8.SuspendLayout();
+            this.gbApplicationPath.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnExport
@@ -234,7 +234,7 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBox2.Controls.Add(this.groupBox8);
+            this.groupBox2.Controls.Add(this.gbAssetPath);
             this.groupBox2.Controls.Add(this.radLinkAssets);
             this.groupBox2.Controls.Add(this.radCopyAssets);
             this.groupBox2.Controls.Add(this.clbAssetList);
@@ -245,6 +245,41 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Asset Export";
             // 
+            // gbAssetPath
+            // 
+            this.gbAssetPath.Controls.Add(this.radioButton3);
+            this.gbAssetPath.Controls.Add(this.radAbsoluteAssets);
+            this.gbAssetPath.Location = new System.Drawing.Point(177, 62);
+            this.gbAssetPath.Name = "gbAssetPath";
+            this.gbAssetPath.Size = new System.Drawing.Size(107, 68);
+            this.gbAssetPath.TabIndex = 6;
+            this.gbAssetPath.TabStop = false;
+            this.gbAssetPath.Text = "Path";
+            // 
+            // radioButton3
+            // 
+            this.radioButton3.AutoSize = true;
+            this.radioButton3.Enabled = false;
+            this.radioButton3.Location = new System.Drawing.Point(16, 42);
+            this.radioButton3.Name = "radioButton3";
+            this.radioButton3.Size = new System.Drawing.Size(64, 17);
+            this.radioButton3.TabIndex = 5;
+            this.radioButton3.Text = "Relative";
+            this.radioButton3.UseVisualStyleBackColor = true;
+            // 
+            // radAbsoluteAssets
+            // 
+            this.radAbsoluteAssets.AutoSize = true;
+            this.radAbsoluteAssets.Checked = true;
+            this.radAbsoluteAssets.Enabled = false;
+            this.radAbsoluteAssets.Location = new System.Drawing.Point(16, 19);
+            this.radAbsoluteAssets.Name = "radAbsoluteAssets";
+            this.radAbsoluteAssets.Size = new System.Drawing.Size(66, 17);
+            this.radAbsoluteAssets.TabIndex = 4;
+            this.radAbsoluteAssets.TabStop = true;
+            this.radAbsoluteAssets.Text = "Absolute";
+            this.radAbsoluteAssets.UseVisualStyleBackColor = true;
+            // 
             // radLinkAssets
             // 
             this.radLinkAssets.AutoSize = true;
@@ -254,6 +289,7 @@
             this.radLinkAssets.TabIndex = 2;
             this.radLinkAssets.Text = "Link to Assets";
             this.radLinkAssets.UseVisualStyleBackColor = true;
+            this.radLinkAssets.CheckedChanged += new System.EventHandler(this.RadLinkAssets_CheckedChanged);
             // 
             // radCopyAssets
             // 
@@ -434,7 +470,7 @@
             // 
             this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBox6.Controls.Add(this.groupBox7);
+            this.groupBox6.Controls.Add(this.gbApplicationPath);
             this.groupBox6.Controls.Add(this.radLinkApplication);
             this.groupBox6.Controls.Add(this.radCopyApplication);
             this.groupBox6.Location = new System.Drawing.Point(305, 208);
@@ -443,6 +479,41 @@
             this.groupBox6.TabIndex = 14;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Application Export";
+            // 
+            // gbApplicationPath
+            // 
+            this.gbApplicationPath.Controls.Add(this.radioButton2);
+            this.gbApplicationPath.Controls.Add(this.radAbsoluteApplication);
+            this.gbApplicationPath.Location = new System.Drawing.Point(6, 62);
+            this.gbApplicationPath.Name = "gbApplicationPath";
+            this.gbApplicationPath.Size = new System.Drawing.Size(115, 68);
+            this.gbApplicationPath.TabIndex = 5;
+            this.gbApplicationPath.TabStop = false;
+            this.gbApplicationPath.Text = "Path";
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Enabled = false;
+            this.radioButton2.Location = new System.Drawing.Point(16, 42);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(64, 17);
+            this.radioButton2.TabIndex = 5;
+            this.radioButton2.Text = "Relative";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // radAbsoluteApplication
+            // 
+            this.radAbsoluteApplication.AutoSize = true;
+            this.radAbsoluteApplication.Checked = true;
+            this.radAbsoluteApplication.Enabled = false;
+            this.radAbsoluteApplication.Location = new System.Drawing.Point(16, 19);
+            this.radAbsoluteApplication.Name = "radAbsoluteApplication";
+            this.radAbsoluteApplication.Size = new System.Drawing.Size(69, 17);
+            this.radAbsoluteApplication.TabIndex = 4;
+            this.radAbsoluteApplication.TabStop = true;
+            this.radAbsoluteApplication.Text = "Absolute.";
+            this.radAbsoluteApplication.UseVisualStyleBackColor = true;
             // 
             // radLinkApplication
             // 
@@ -453,6 +524,7 @@
             this.radLinkApplication.TabIndex = 4;
             this.radLinkApplication.Text = "Link to Application";
             this.radLinkApplication.UseVisualStyleBackColor = true;
+            this.radLinkApplication.CheckedChanged += new System.EventHandler(this.RadLinkApplication_CheckedChanged);
             // 
             // radCopyApplication
             // 
@@ -465,72 +537,6 @@
             this.radCopyApplication.TabStop = true;
             this.radCopyApplication.Text = "Copy Application";
             this.radCopyApplication.UseVisualStyleBackColor = true;
-            // 
-            // groupBox7
-            // 
-            this.groupBox7.Controls.Add(this.radioButton2);
-            this.groupBox7.Controls.Add(this.radAbsoluteApplication);
-            this.groupBox7.Location = new System.Drawing.Point(6, 62);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(115, 68);
-            this.groupBox7.TabIndex = 5;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Path";
-            // 
-            // radAbsoluteApplication
-            // 
-            this.radAbsoluteApplication.AutoSize = true;
-            this.radAbsoluteApplication.Checked = true;
-            this.radAbsoluteApplication.Location = new System.Drawing.Point(16, 19);
-            this.radAbsoluteApplication.Name = "radAbsoluteApplication";
-            this.radAbsoluteApplication.Size = new System.Drawing.Size(69, 17);
-            this.radAbsoluteApplication.TabIndex = 4;
-            this.radAbsoluteApplication.TabStop = true;
-            this.radAbsoluteApplication.Text = "Absolute.";
-            this.radAbsoluteApplication.UseVisualStyleBackColor = true;
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(16, 42);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(64, 17);
-            this.radioButton2.TabIndex = 5;
-            this.radioButton2.Text = "Relative";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // groupBox8
-            // 
-            this.groupBox8.Controls.Add(this.radioButton3);
-            this.groupBox8.Controls.Add(this.radAbsoluteAssets);
-            this.groupBox8.Location = new System.Drawing.Point(177, 62);
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(107, 68);
-            this.groupBox8.TabIndex = 6;
-            this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Path";
-            // 
-            // radioButton3
-            // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(16, 42);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(64, 17);
-            this.radioButton3.TabIndex = 5;
-            this.radioButton3.Text = "Relative";
-            this.radioButton3.UseVisualStyleBackColor = true;
-            // 
-            // radAbsoluteAssets
-            // 
-            this.radAbsoluteAssets.AutoSize = true;
-            this.radAbsoluteAssets.Checked = true;
-            this.radAbsoluteAssets.Location = new System.Drawing.Point(16, 19);
-            this.radAbsoluteAssets.Name = "radAbsoluteAssets";
-            this.radAbsoluteAssets.Size = new System.Drawing.Size(66, 17);
-            this.radAbsoluteAssets.TabIndex = 4;
-            this.radAbsoluteAssets.TabStop = true;
-            this.radAbsoluteAssets.Text = "Absolute";
-            this.radAbsoluteAssets.UseVisualStyleBackColor = true;
             // 
             // frmPegasusExport
             // 
@@ -552,6 +558,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.gbAssetPath.ResumeLayout(false);
+            this.gbAssetPath.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlatforms)).EndInit();
@@ -561,10 +569,8 @@
             this.panel1.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
-            this.groupBox7.ResumeLayout(false);
-            this.groupBox7.PerformLayout();
-            this.groupBox8.ResumeLayout(false);
-            this.groupBox8.PerformLayout();
+            this.gbApplicationPath.ResumeLayout(false);
+            this.gbApplicationPath.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -606,10 +612,10 @@
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.RadioButton radLinkApplication;
         private System.Windows.Forms.RadioButton radCopyApplication;
-        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.GroupBox gbAssetPath;
         private System.Windows.Forms.RadioButton radioButton3;
         private System.Windows.Forms.RadioButton radAbsoluteAssets;
-        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.GroupBox gbApplicationPath;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radAbsoluteApplication;
     }
