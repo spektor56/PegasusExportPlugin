@@ -46,15 +46,21 @@
     </asset>
     <asset>
       <key>Arcade - Marquee</key>
-      <value></value>
+      <value>marquee</value>
     </asset>
     <asset>
       <key>Banner</key>
-      <value></value>
+      <value>banner</value>
+      <aspectRatios>
+        <aspectRatio>
+          <width>16</width>
+          <height>9</height>
+        </aspectRatio>
+      </aspectRatios>
     </asset>
     <asset>
       <key>Cart - Front</key>
-      <value></value>
+      <value>cartridge</value>
     </asset>
     <asset>
       <key>Cart - Back</key>
@@ -98,7 +104,7 @@
     </asset>
     <asset>
       <key>Screenshot - Gameplay</key>
-      <value></value>
+      <value>screenshots</value>
     </asset>
     <asset>
       <key>Screenshot - Game Title</key>
@@ -118,7 +124,17 @@
     </asset>
     <asset>
       <key>Steam Banner</key>
-      <value></value>
+      <value>steam</value>
+      <resolutions>
+        <resolution>
+          <width>460</width>
+          <height>215</height>
+        </resolution>
+        <resolution>
+          <width>920</width>
+          <height>430</height>
+        </resolution>
+      </resolutions>
     </asset>
     <asset>
       <key>Video</key>
