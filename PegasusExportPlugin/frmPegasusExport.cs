@@ -195,7 +195,7 @@ namespace PegasusExportPlugin
 
                                     if (!string.IsNullOrWhiteSpace(game.Notes))
                                     {
-                                        var description = game.Notes.Split(new string[]{ @"\r\n",@"\n" }, StringSplitOptions.None);
+                                        var description = game.Notes.Split(new string[]{ "\r\n","\n" }, StringSplitOptions.None);
                                         gameMetadataBuilder.AppendLine($"description: {description[0]}");
 
                                         if (description.Length > 1)
