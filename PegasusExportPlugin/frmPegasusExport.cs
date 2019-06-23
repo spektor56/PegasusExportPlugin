@@ -195,7 +195,16 @@ namespace PegasusExportPlugin
 
                                     if (!string.IsNullOrWhiteSpace(game.Notes))
                                     {
-                                        gameMetadataBuilder.AppendLine($"description: {game.Notes}");
+                                        var description = game.Notes.Split(new string[]{ @"\r\n",@"\n" }, StringSplitOptions.None);
+                                        gameMetadataBuilder.AppendLine($"description: {description[0]}");
+
+                                        if (description.Length > 1)
+                                        {
+                                            for (int i = 1; i < description.Length; i++)
+                                            {
+                                                gameMetadataBuilder.AppendLine($" {(string.IsNullOrWhiteSpace(description[i]) ? "." : description[i])}");
+                                            }
+                                        }
                                     }
 
                                     if (game.ReleaseDate != null)
