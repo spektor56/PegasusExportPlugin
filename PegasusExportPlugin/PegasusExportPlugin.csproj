@@ -34,9 +34,13 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="netstandard" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Common">
+      <HintPath>..\..\..\..\LaunchBox\Metadata\System.Drawing.Common.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,10 +48,15 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Unbroken">
+    <Reference Include="Unbroken, Version=9.10.0.2, Culture=neutral, PublicKeyToken=97d6238f04304129, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\LaunchBox\Metadata\Unbroken.dll</HintPath>
     </Reference>
-    <Reference Include="Unbroken.LaunchBox.Plugins">
+    <Reference Include="Unbroken.LaunchBox">
+      <HintPath>..\..\..\..\LaunchBox\Metadata\Unbroken.LaunchBox.dll</HintPath>
+    </Reference>
+    <Reference Include="Unbroken.LaunchBox.Plugins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=558191e84f56affc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\LaunchBox\Metadata\Unbroken.LaunchBox.Plugins.dll</HintPath>
     </Reference>
   </ItemGroup>

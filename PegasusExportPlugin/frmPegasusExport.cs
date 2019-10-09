@@ -17,6 +17,7 @@ using Unbroken;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
 using PegasusExportPlugin.Extensions;
+using Unbroken.LaunchBox;
 
 namespace PegasusExportPlugin
 {
@@ -107,7 +108,7 @@ namespace PegasusExportPlugin
                     var platformAssetExportList = new HashSet<string> (platformsToExport.Where(platform => platform.ExportAssets).Select(platform => platform.Name));
                     var platformMetadataExportList = new HashSet<string>(platformsToExport.Where(platform => platform.ExportMetadata).Select(platform => platform.Name));
                     var platformApplicationExportList = new HashSet<string>(platformsToExport.Where(platform => platform.ExportApplication).Select(platform => platform.Name));
-
+                    
                     var games = _dataManager.GetAllGames().Where(game => platformList.Contains(game.Platform)).ToArray();
                     var numberOfGames = games.Length;
                     var gamesByPlatform = games.OrderBy(game => game.SortTitleOrTitle).GroupBy(game => game.Platform);
@@ -115,7 +116,7 @@ namespace PegasusExportPlugin
                     Parallel.ForEach(gamesByPlatform, gamePlatform =>
                     {
                         var platform = gamePlatform.First().Platform;
-                        var platformFolderName = FileHelper.CoerceValidFileName(platform);
+                        var platformFolderName = Helper.CoerceValidFileName(platform);
                         var platformPath = Path.Combine(selectedFolder, platformFolderName);
                         Directory.CreateDirectory(platformPath);
                         var metadataBuilder = new StringBuilder();
@@ -150,28 +151,70 @@ namespace PegasusExportPlugin
 
                                     if (!string.IsNullOrWhiteSpace(game.ApplicationPath))
                                     {
-                                        string file;
+                                        var files = new HashSet<string>();
+                                        var additionalApplications = game.GetAllAdditionalApplications();
                                         if (copyApplication)
                                         {
-                                            file = Path.GetFileName(game.ApplicationPath);
+                                            files.Add(Path.GetFileName(game.ApplicationPath));
+                                            foreach (var application in additionalApplications)
+                                            {
+                                                var fileName = Path.GetFileName(application.ApplicationPath);
+                                                if (!files.Contains(fileName))
+                                                {
+                                                    files.Add(fileName);
+                                                }
+                                            }
                                         }
                                         else
                                         {
                                             if(applicationAbsolutePath)
                                             {
-                                                file = Path.GetFullPath(game.ApplicationPath);
+                                                files.Add(Path.GetFullPath(game.ApplicationPath));
+                                                foreach (var application in additionalApplications)
+                                                {
+                                                    var fileName = Path.GetFullPath(application.ApplicationPath);
+                                                    if (!files.Contains(fileName))
+                                                    {
+                                                        files.Add(fileName);
+                                                    }
+                                                }
                                             }
                                             else
                                             {
-                                                file = GetRelativePath(platformPath, game.ApplicationPath); 
+                                                files.Add(GetRelativePath(platformPath, game.ApplicationPath));
+                                                foreach (var application in additionalApplications)
+                                                {
+                                                    var fileName = GetRelativePath(platformPath, application.ApplicationPath);
+                                                    if (!files.Contains(fileName))
+                                                    {
+                                                        files.Add(fileName);
+                                                    }
+                                                }
                                             }
                                         }
-                                        gameMetadataBuilder.AppendLine($"file: {file}");
 
-                                        var fileExtension = Path.GetExtension(file).Replace(".", "");
-                                        if (!fileExtensions.Contains(fileExtension))
+                                        if (files.Count > 1)
                                         {
-                                            fileExtensions.Add(fileExtension);
+                                            gameMetadataBuilder.AppendLine($"files:");
+                                            foreach (var file in files)
+                                            {
+                                                gameMetadataBuilder.AppendLine($" {file}");
+                                                var fileExtension = Path.GetExtension(file).Replace(".", "");
+                                                if (!fileExtensions.Contains(fileExtension))
+                                                {
+                                                    fileExtensions.Add(fileExtension);
+                                                }
+                                            }
+                                        }
+                                        else if (files.Count > 0)
+                                        {
+                                            var file = files.First();
+                                            gameMetadataBuilder.AppendLine($"file: {file}");
+                                            var fileExtension = Path.GetExtension(file).Replace(".", "");
+                                            if (!fileExtensions.Contains(fileExtension))
+                                            {
+                                                fileExtensions.Add(fileExtension);
+                                            }
                                         }
                                     }
 
@@ -312,6 +355,22 @@ namespace PegasusExportPlugin
                             //Export Roms
                             if (copyApplication && exportApplication)
                             {
+                                var additionalApplications = game.GetAllAdditionalApplications();
+
+                                foreach (var additionalApplication in additionalApplications)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(additionalApplication.ApplicationPath) && File.Exists(additionalApplication.ApplicationPath))
+                                    {
+                                        File.Copy(additionalApplication.ApplicationPath,
+                                            Path.Combine(platformPath, Path.GetFileName(additionalApplication.ApplicationPath)), true);
+                                        var fileExtension = Path.GetExtension(additionalApplication.ApplicationPath).Replace(".", "");
+                                        if (!fileExtensions.Contains(fileExtension))
+                                        {
+                                            fileExtensions.Add(fileExtension);
+                                        }
+                                    }
+                                }
+
                                 if (!string.IsNullOrWhiteSpace(game.ApplicationPath) && File.Exists(game.ApplicationPath))
                                 {
                                     File.Copy(game.ApplicationPath,
