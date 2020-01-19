@@ -116,7 +116,7 @@ namespace PegasusExportPlugin
                     Parallel.ForEach(gamesByPlatform, gamePlatform =>
                     {
                         var platform = gamePlatform.First().Platform;
-                        var platformFolderName = Helper.CoerceValidFileName(platform);
+                        var platformFolderName = Unbroken.LaunchBox.NamingHelper.CoerceValidFileName(platform);
                         var platformPath = Path.Combine(selectedFolder, platformFolderName);
                         Directory.CreateDirectory(platformPath);
                         var metadataBuilder = new StringBuilder();
