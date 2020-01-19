@@ -44,11 +44,18 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Unbroken">
-      <HintPath>..\..\..\..\LaunchBox\Metadata\Unbroken.dll</HintPath>
+    <Reference Include="Unbroken, Version=9.10.0.2, Culture=neutral, PublicKeyToken=97d6238f04304129, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\LaunchBox\Plugins\Unbroken.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="Unbroken.LaunchBox.Plugins">
-      <HintPath>..\..\..\..\LaunchBox\Metadata\Unbroken.LaunchBox.Plugins.dll</HintPath>
+    <Reference Include="Unbroken.LaunchBox">
+      <HintPath>..\..\..\..\..\LaunchBox\Plugins\Unbroken.LaunchBox.dll</HintPath>
+    </Reference>
+    <Reference Include="Unbroken.LaunchBox.Plugins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=558191e84f56affc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\LaunchBox\Plugins\Unbroken.LaunchBox.Plugins.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -96,7 +103,11 @@
   <ItemGroup>
     <None Include="Resources\favicon96.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common">
+      <Version>4.7.0</Version>
+    </PackageReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="img\img0.jpg" />
     <Content Include="img\img1.JPG" />
