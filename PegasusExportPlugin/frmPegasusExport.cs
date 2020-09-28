@@ -101,6 +101,7 @@ namespace PegasusExportPlugin
                 bool copyApplication = radCopyApplication.Checked;
                 bool assetsAbsolutePath = radAbsoluteAssets.Checked;
                 bool applicationAbsolutePath = radAbsoluteApplication.Checked;
+                bool singleExport = chkSingleExport.Checked;
                 
                 progressBar.Value = 0;
                 await Task.Run(() =>
@@ -159,7 +160,7 @@ namespace PegasusExportPlugin
                             exportApplication = exportApplicationChecked && platformApplicationExportList.Contains(platform);
                             exportMetadata = (exportMetadataChecked && platformMetadataExportList.Contains(platform)) || (exportApplication && !copyApplication) || (exportAssets && !copyAssets);
                         }
-
+                        
                         
 
                         if (exportMetadata)
@@ -437,10 +438,11 @@ namespace PegasusExportPlugin
                                 var mediaFolder = Path.Combine(platformPath, "media",
                                     Path.GetFileNameWithoutExtension(game.Key.ApplicationPath));
 
-                                ImageDetails exportImage;
+                                List<ImageDetails> exportImages = new List<ImageDetails>();
 
                                 if (pegasusImageType == PegasusAssetType.BoxFront)
                                 {
+                                    ImageDetails exportImage = null;
                                     exportImage = game.Value.First().Image;
                                     double? minDifference = null;
                                     foreach(var imageDetail in game.Value)
@@ -460,30 +462,43 @@ namespace PegasusExportPlugin
                                             }
                                         }
                                     }
+                                    exportImages.Add(exportImage);
                                 }
                                 else
                                 {
-                                    exportImage = game.Value.First().Image;
-                                }
-
-                                if (copyAssets)
-                                {
-                                    Directory.CreateDirectory(mediaFolder);
-                                    File.Copy(exportImage.FilePath,
-                                        Path.Combine(mediaFolder, pegasusImageType + Path.GetExtension(exportImage.FilePath)),
-                                        true);
-                                }
-                                else
-                                {
-                                    if (assetsAbsolutePath)
+                                    if (singleExport)
                                     {
-                                        gamesMetadata[game.Key].AppendLine($@"assets.{pegasusImageType}: {Path.GetFullPath(exportImage.FilePath)}");
+                                        exportImages = game.Value.Select(image => image.Image).ToList();
                                     }
                                     else
                                     {
-                                        gamesMetadata[game.Key].AppendLine($@"assets.{pegasusImageType}: {GetRelativePath(platformPath,exportImage.FilePath)}");
+                                        exportImages.Add(game.Value.First().Image);
                                     }
                                 }
+
+                                foreach (var exportImage in exportImages)
+                                {
+                                    if (copyAssets)
+                                    {
+                                        var fileName = Path.Combine(mediaFolder, pegasusImageType + Path.GetExtension(exportImage.FilePath));
+                                        Directory.CreateDirectory(mediaFolder);
+                                        File.Copy(exportImage.FilePath,
+                                            singleExport ? fileName : fileName.UniqueFileName(),
+                                            true);
+                                    }
+                                    else
+                                    {
+                                        if (assetsAbsolutePath)
+                                        {
+                                            gamesMetadata[game.Key].AppendLine($@"assets.{pegasusImageType}: {Path.GetFullPath(exportImage.FilePath)}");
+                                        }
+                                        else
+                                        {
+                                            gamesMetadata[game.Key].AppendLine($@"assets.{pegasusImageType}: {GetRelativePath(platformPath, exportImage.FilePath)}");
+                                        }
+                                    }
+                                }
+                                
                             }
                         }
 

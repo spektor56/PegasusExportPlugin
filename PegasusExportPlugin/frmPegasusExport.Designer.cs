@@ -62,12 +62,6 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.gbApplicationPath = new System.Windows.Forms.GroupBox();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radAbsoluteApplication = new System.Windows.Forms.RadioButton();
-            this.radLinkApplication = new System.Windows.Forms.RadioButton();
-            this.radCopyApplication = new System.Windows.Forms.RadioButton();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.dgvPlaylists = new System.Windows.Forms.DataGridView();
             this.colSelected2 = new PegasusExportPlugin.Controls.DataGridViewHeaderCheckBoxColumn();
@@ -75,6 +69,13 @@
             this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dataGridViewCheckBoxColumn2 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dataGridViewCheckBoxColumn3 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.gbApplicationPath = new System.Windows.Forms.GroupBox();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radAbsoluteApplication = new System.Windows.Forms.RadioButton();
+            this.radLinkApplication = new System.Windows.Forms.RadioButton();
+            this.radCopyApplication = new System.Windows.Forms.RadioButton();
+            this.chkSingleExport = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.gbAssetPath.SuspendLayout();
@@ -83,10 +84,10 @@
             this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.groupBox6.SuspendLayout();
-            this.gbApplicationPath.SuspendLayout();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlaylists)).BeginInit();
+            this.groupBox6.SuspendLayout();
+            this.gbApplicationPath.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnExport
@@ -338,11 +339,12 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.chkSingleExport);
             this.groupBox3.Controls.Add(this.radAutoChoose);
             this.groupBox3.Controls.Add(this.radChoose);
             this.groupBox3.Location = new System.Drawing.Point(655, 352);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(106, 70);
+            this.groupBox3.Size = new System.Drawing.Size(106, 130);
             this.groupBox3.TabIndex = 12;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Duplicate Assets";
@@ -476,78 +478,6 @@
             this.panel1.Size = new System.Drawing.Size(770, 557);
             this.panel1.TabIndex = 14;
             // 
-            // groupBox6
-            // 
-            this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBox6.Controls.Add(this.gbApplicationPath);
-            this.groupBox6.Controls.Add(this.radLinkApplication);
-            this.groupBox6.Controls.Add(this.radCopyApplication);
-            this.groupBox6.Location = new System.Drawing.Point(305, 352);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(127, 197);
-            this.groupBox6.TabIndex = 14;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Application Export";
-            // 
-            // gbApplicationPath
-            // 
-            this.gbApplicationPath.Controls.Add(this.radioButton2);
-            this.gbApplicationPath.Controls.Add(this.radAbsoluteApplication);
-            this.gbApplicationPath.Location = new System.Drawing.Point(6, 62);
-            this.gbApplicationPath.Name = "gbApplicationPath";
-            this.gbApplicationPath.Size = new System.Drawing.Size(115, 68);
-            this.gbApplicationPath.TabIndex = 5;
-            this.gbApplicationPath.TabStop = false;
-            this.gbApplicationPath.Text = "Path";
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Enabled = false;
-            this.radioButton2.Location = new System.Drawing.Point(16, 42);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(64, 17);
-            this.radioButton2.TabIndex = 5;
-            this.radioButton2.Text = "Relative";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // radAbsoluteApplication
-            // 
-            this.radAbsoluteApplication.AutoSize = true;
-            this.radAbsoluteApplication.Checked = true;
-            this.radAbsoluteApplication.Enabled = false;
-            this.radAbsoluteApplication.Location = new System.Drawing.Point(16, 19);
-            this.radAbsoluteApplication.Name = "radAbsoluteApplication";
-            this.radAbsoluteApplication.Size = new System.Drawing.Size(69, 17);
-            this.radAbsoluteApplication.TabIndex = 4;
-            this.radAbsoluteApplication.TabStop = true;
-            this.radAbsoluteApplication.Text = "Absolute.";
-            this.radAbsoluteApplication.UseVisualStyleBackColor = true;
-            // 
-            // radLinkApplication
-            // 
-            this.radLinkApplication.AutoSize = true;
-            this.radLinkApplication.Location = new System.Drawing.Point(6, 39);
-            this.radLinkApplication.Name = "radLinkApplication";
-            this.radLinkApplication.Size = new System.Drawing.Size(112, 17);
-            this.radLinkApplication.TabIndex = 4;
-            this.radLinkApplication.Text = "Link to Application";
-            this.radLinkApplication.UseVisualStyleBackColor = true;
-            this.radLinkApplication.CheckedChanged += new System.EventHandler(this.RadLinkApplication_CheckedChanged);
-            // 
-            // radCopyApplication
-            // 
-            this.radCopyApplication.AutoSize = true;
-            this.radCopyApplication.Checked = true;
-            this.radCopyApplication.Location = new System.Drawing.Point(6, 16);
-            this.radCopyApplication.Name = "radCopyApplication";
-            this.radCopyApplication.Size = new System.Drawing.Size(104, 17);
-            this.radCopyApplication.TabIndex = 3;
-            this.radCopyApplication.TabStop = true;
-            this.radCopyApplication.Text = "Copy Application";
-            this.radCopyApplication.UseVisualStyleBackColor = true;
-            // 
             // groupBox7
             // 
             this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -630,6 +560,90 @@
             this.dataGridViewCheckBoxColumn3.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridViewCheckBoxColumn3.Width = 65;
             // 
+            // groupBox6
+            // 
+            this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox6.Controls.Add(this.gbApplicationPath);
+            this.groupBox6.Controls.Add(this.radLinkApplication);
+            this.groupBox6.Controls.Add(this.radCopyApplication);
+            this.groupBox6.Location = new System.Drawing.Point(305, 352);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(127, 197);
+            this.groupBox6.TabIndex = 14;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Application Export";
+            // 
+            // gbApplicationPath
+            // 
+            this.gbApplicationPath.Controls.Add(this.radioButton2);
+            this.gbApplicationPath.Controls.Add(this.radAbsoluteApplication);
+            this.gbApplicationPath.Location = new System.Drawing.Point(6, 62);
+            this.gbApplicationPath.Name = "gbApplicationPath";
+            this.gbApplicationPath.Size = new System.Drawing.Size(115, 68);
+            this.gbApplicationPath.TabIndex = 5;
+            this.gbApplicationPath.TabStop = false;
+            this.gbApplicationPath.Text = "Path";
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Enabled = false;
+            this.radioButton2.Location = new System.Drawing.Point(16, 42);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(64, 17);
+            this.radioButton2.TabIndex = 5;
+            this.radioButton2.Text = "Relative";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // radAbsoluteApplication
+            // 
+            this.radAbsoluteApplication.AutoSize = true;
+            this.radAbsoluteApplication.Checked = true;
+            this.radAbsoluteApplication.Enabled = false;
+            this.radAbsoluteApplication.Location = new System.Drawing.Point(16, 19);
+            this.radAbsoluteApplication.Name = "radAbsoluteApplication";
+            this.radAbsoluteApplication.Size = new System.Drawing.Size(69, 17);
+            this.radAbsoluteApplication.TabIndex = 4;
+            this.radAbsoluteApplication.TabStop = true;
+            this.radAbsoluteApplication.Text = "Absolute.";
+            this.radAbsoluteApplication.UseVisualStyleBackColor = true;
+            // 
+            // radLinkApplication
+            // 
+            this.radLinkApplication.AutoSize = true;
+            this.radLinkApplication.Location = new System.Drawing.Point(6, 39);
+            this.radLinkApplication.Name = "radLinkApplication";
+            this.radLinkApplication.Size = new System.Drawing.Size(112, 17);
+            this.radLinkApplication.TabIndex = 4;
+            this.radLinkApplication.Text = "Link to Application";
+            this.radLinkApplication.UseVisualStyleBackColor = true;
+            this.radLinkApplication.CheckedChanged += new System.EventHandler(this.RadLinkApplication_CheckedChanged);
+            // 
+            // radCopyApplication
+            // 
+            this.radCopyApplication.AutoSize = true;
+            this.radCopyApplication.Checked = true;
+            this.radCopyApplication.Location = new System.Drawing.Point(6, 16);
+            this.radCopyApplication.Name = "radCopyApplication";
+            this.radCopyApplication.Size = new System.Drawing.Size(104, 17);
+            this.radCopyApplication.TabIndex = 3;
+            this.radCopyApplication.TabStop = true;
+            this.radCopyApplication.Text = "Copy Application";
+            this.radCopyApplication.UseVisualStyleBackColor = true;
+            // 
+            // chkSingleExport
+            // 
+            this.chkSingleExport.AutoSize = true;
+            this.chkSingleExport.Checked = true;
+            this.chkSingleExport.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkSingleExport.Location = new System.Drawing.Point(6, 65);
+            this.chkSingleExport.Name = "chkSingleExport";
+            this.chkSingleExport.Size = new System.Drawing.Size(88, 17);
+            this.chkSingleExport.TabIndex = 14;
+            this.chkSingleExport.Text = "Single Export";
+            this.chkSingleExport.UseVisualStyleBackColor = true;
+            // 
             // frmPegasusExport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -659,12 +673,12 @@
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.panel1.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPlaylists)).EndInit();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             this.gbApplicationPath.ResumeLayout(false);
             this.gbApplicationPath.PerformLayout();
-            this.groupBox7.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvPlaylists)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -719,5 +733,6 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn1;
         private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn2;
         private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn3;
+        private System.Windows.Forms.CheckBox chkSingleExport;
     }
 }
