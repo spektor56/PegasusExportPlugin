@@ -68,6 +68,13 @@
             this.radAbsoluteApplication = new System.Windows.Forms.RadioButton();
             this.radLinkApplication = new System.Windows.Forms.RadioButton();
             this.radCopyApplication = new System.Windows.Forms.RadioButton();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.dgvPlaylists = new System.Windows.Forms.DataGridView();
+            this.colSelected2 = new PegasusExportPlugin.Controls.DataGridViewHeaderCheckBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dataGridViewCheckBoxColumn2 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dataGridViewCheckBoxColumn3 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.gbAssetPath.SuspendLayout();
@@ -78,13 +85,15 @@
             this.panel1.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.gbApplicationPath.SuspendLayout();
+            this.groupBox7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPlaylists)).BeginInit();
             this.SuspendLayout();
             // 
             // btnExport
             // 
             this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExport.Location = new System.Drawing.Point(12, 441);
+            this.btnExport.Location = new System.Drawing.Point(12, 631);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(770, 23);
             this.btnExport.TabIndex = 0;
@@ -126,7 +135,7 @@
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(12, 412);
+            this.progressBar.Location = new System.Drawing.Point(12, 602);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(770, 23);
             this.progressBar.TabIndex = 4;
@@ -174,9 +183,9 @@
             this.groupBox1.Controls.Add(this.btnUp);
             this.groupBox1.Controls.Add(this.lbImagePriority);
             this.groupBox1.Controls.Add(this.btnDown);
-            this.groupBox1.Location = new System.Drawing.Point(438, 208);
+            this.groupBox1.Location = new System.Drawing.Point(438, 352);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(211, 151);
+            this.groupBox1.Size = new System.Drawing.Size(211, 197);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Box Art Priority";
@@ -205,7 +214,7 @@
             "Larger File Size"});
             this.lbImagePriority.Location = new System.Drawing.Point(12, 48);
             this.lbImagePriority.Name = "lbImagePriority";
-            this.lbImagePriority.Size = new System.Drawing.Size(188, 82);
+            this.lbImagePriority.Size = new System.Drawing.Size(188, 134);
             this.lbImagePriority.TabIndex = 10;
             // 
             // btnDown
@@ -238,9 +247,9 @@
             this.groupBox2.Controls.Add(this.radLinkAssets);
             this.groupBox2.Controls.Add(this.radCopyAssets);
             this.groupBox2.Controls.Add(this.clbAssetList);
-            this.groupBox2.Location = new System.Drawing.Point(9, 208);
+            this.groupBox2.Location = new System.Drawing.Point(9, 352);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(290, 151);
+            this.groupBox2.Size = new System.Drawing.Size(290, 197);
             this.groupBox2.TabIndex = 11;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Asset Export";
@@ -312,7 +321,7 @@
             this.clbAssetList.FormattingEnabled = true;
             this.clbAssetList.Location = new System.Drawing.Point(3, 16);
             this.clbAssetList.Name = "clbAssetList";
-            this.clbAssetList.Size = new System.Drawing.Size(168, 124);
+            this.clbAssetList.Size = new System.Drawing.Size(168, 154);
             this.clbAssetList.TabIndex = 0;
             // 
             // radAutoChoose
@@ -331,7 +340,7 @@
             // 
             this.groupBox3.Controls.Add(this.radAutoChoose);
             this.groupBox3.Controls.Add(this.radChoose);
-            this.groupBox3.Location = new System.Drawing.Point(655, 208);
+            this.groupBox3.Location = new System.Drawing.Point(655, 352);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(106, 70);
             this.groupBox3.TabIndex = 12;
@@ -455,6 +464,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.groupBox7);
             this.panel1.Controls.Add(this.groupBox6);
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.groupBox5);
@@ -463,7 +473,7 @@
             this.panel1.Controls.Add(this.groupBox2);
             this.panel1.Location = new System.Drawing.Point(12, 39);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(770, 367);
+            this.panel1.Size = new System.Drawing.Size(770, 557);
             this.panel1.TabIndex = 14;
             // 
             // groupBox6
@@ -473,9 +483,9 @@
             this.groupBox6.Controls.Add(this.gbApplicationPath);
             this.groupBox6.Controls.Add(this.radLinkApplication);
             this.groupBox6.Controls.Add(this.radCopyApplication);
-            this.groupBox6.Location = new System.Drawing.Point(305, 208);
+            this.groupBox6.Location = new System.Drawing.Point(305, 352);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(127, 151);
+            this.groupBox6.Size = new System.Drawing.Size(127, 197);
             this.groupBox6.TabIndex = 14;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Application Export";
@@ -538,11 +548,93 @@
             this.radCopyApplication.Text = "Copy Application";
             this.radCopyApplication.UseVisualStyleBackColor = true;
             // 
+            // groupBox7
+            // 
+            this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox7.Controls.Add(this.dgvPlaylists);
+            this.groupBox7.Location = new System.Drawing.Point(3, 191);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(764, 149);
+            this.groupBox7.TabIndex = 15;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Playlist Export Options";
+            // 
+            // dgvPlaylists
+            // 
+            this.dgvPlaylists.AllowUserToAddRows = false;
+            this.dgvPlaylists.AllowUserToDeleteRows = false;
+            this.dgvPlaylists.AllowUserToResizeRows = false;
+            this.dgvPlaylists.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvPlaylists.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvPlaylists.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvPlaylists.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colSelected2,
+            this.dataGridViewTextBoxColumn2,
+            this.dataGridViewCheckBoxColumn1,
+            this.dataGridViewCheckBoxColumn2,
+            this.dataGridViewCheckBoxColumn3});
+            this.dgvPlaylists.Location = new System.Drawing.Point(8, 19);
+            this.dgvPlaylists.Name = "dgvPlaylists";
+            this.dgvPlaylists.RowHeadersVisible = false;
+            this.dgvPlaylists.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.ColumnHeaderSelect;
+            this.dgvPlaylists.ShowEditingIcon = false;
+            this.dgvPlaylists.Size = new System.Drawing.Size(750, 119);
+            this.dgvPlaylists.TabIndex = 13;
+            // 
+            // colSelected2
+            // 
+            this.colSelected2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.colSelected2.DataPropertyName = "Selected";
+            this.colSelected2.HeaderCheckBox = true;
+            this.colSelected2.HeaderText = "";
+            this.colSelected2.MinimumWidth = 20;
+            this.colSelected2.Name = "colSelected2";
+            this.colSelected2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colSelected2.Width = 20;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "Name";
+            this.dataGridViewTextBoxColumn2.HeaderText = "Playlist";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // dataGridViewCheckBoxColumn1
+            // 
+            this.dataGridViewCheckBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dataGridViewCheckBoxColumn1.DataPropertyName = "ExportMetadata";
+            this.dataGridViewCheckBoxColumn1.HeaderText = "Metadata";
+            this.dataGridViewCheckBoxColumn1.Name = "dataGridViewCheckBoxColumn1";
+            this.dataGridViewCheckBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewCheckBoxColumn1.Width = 58;
+            // 
+            // dataGridViewCheckBoxColumn2
+            // 
+            this.dataGridViewCheckBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dataGridViewCheckBoxColumn2.DataPropertyName = "ExportAssets";
+            this.dataGridViewCheckBoxColumn2.HeaderText = "Assets";
+            this.dataGridViewCheckBoxColumn2.Name = "dataGridViewCheckBoxColumn2";
+            this.dataGridViewCheckBoxColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewCheckBoxColumn2.Width = 44;
+            // 
+            // dataGridViewCheckBoxColumn3
+            // 
+            this.dataGridViewCheckBoxColumn3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.dataGridViewCheckBoxColumn3.DataPropertyName = "ExportApplication";
+            this.dataGridViewCheckBoxColumn3.HeaderText = "Application";
+            this.dataGridViewCheckBoxColumn3.Name = "dataGridViewCheckBoxColumn3";
+            this.dataGridViewCheckBoxColumn3.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewCheckBoxColumn3.Width = 65;
+            // 
             // frmPegasusExport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(794, 476);
+            this.ClientSize = new System.Drawing.Size(794, 666);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.btnBrowse);
@@ -571,6 +663,8 @@
             this.groupBox6.PerformLayout();
             this.gbApplicationPath.ResumeLayout(false);
             this.gbApplicationPath.PerformLayout();
+            this.groupBox7.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPlaylists)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -618,5 +712,12 @@
         private System.Windows.Forms.GroupBox gbApplicationPath;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radAbsoluteApplication;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.DataGridView dgvPlaylists;
+        private Controls.DataGridViewHeaderCheckBoxColumn colSelected2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn1;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn2;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn3;
     }
 }

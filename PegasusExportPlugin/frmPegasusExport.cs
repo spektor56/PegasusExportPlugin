@@ -81,12 +81,15 @@ namespace PegasusExportPlugin
 
             var platformSettings = (BindingList<PlatformSetting>)dgvPlatforms.DataSource;
             var platformsToExport = platformSettings.Where(platform => platform.Selected && ((platform.ExportApplication && chkApplication.Checked) || (platform.ExportAssets && chkAssets.Checked) || (platform.ExportMetadata && chkMetaData.Checked))).ToArray();
-            if(platformsToExport.Length < 1)
+            
+            var playlistSettings = (BindingList<PlaylistSetting>)dgvPlaylists.DataSource;
+            var playlistsToExport = playlistSettings.Where(playlist => playlist.Selected && ((playlist.ExportApplication && chkApplication.Checked) || (playlist.ExportAssets && chkAssets.Checked) || (playlist.ExportMetadata && chkMetaData.Checked))).ToArray();
+            if (playlistsToExport.Length < 1 && platformsToExport.Length < 1)
             {
-                MessageBox.Show("You didn't select any platforms/data to export.");
+                MessageBox.Show("You didn't select any platforms/playlists/data to export.");
                 return;
             }
-            
+
             btnExport.Enabled = false;
             try
             {
@@ -108,21 +111,52 @@ namespace PegasusExportPlugin
                     var platformMetadataExportList = new HashSet<string>(platformsToExport.Where(platform => platform.ExportMetadata).Select(platform => platform.Name));
                     var platformApplicationExportList = new HashSet<string>(platformsToExport.Where(platform => platform.ExportApplication).Select(platform => platform.Name));
 
-                    var games = _dataManager.GetAllGames().Where(game => platformList.Contains(game.Platform)).ToArray();
-                    var numberOfGames = games.Length;
-                    var gamesByPlatform = games.OrderBy(game => game.SortTitleOrTitle).GroupBy(game => game.Platform);
+                    var playlistAssetExportList = new HashSet<string>(playlistsToExport.Where(playlist => playlist.ExportAssets).Select(playlist => playlist.Name));
+                    var playlistMetadataExportList = new HashSet<string>(playlistsToExport.Where(playlist => playlist.ExportMetadata).Select(playlist => playlist.Name));
+                    var playlistApplicationExportList = new HashSet<string>(playlistsToExport.Where(playlist => playlist.ExportApplication).Select(playlist => playlist.Name));
 
+                    var games = _dataManager.GetAllGames().Where(game =>  platformList.Contains(game.Platform)).ToArray();
+                    
+                    var numberOfGamesInPlaylists = playlistsToExport.Sum(playlist => playlist.Games.Length);
+                    var numberOfGames = games.Length + numberOfGamesInPlaylists;
+
+                    var gamesByPlatform = games.OrderBy(game => game.SortTitleOrTitle).GroupBy(game => new { Platform = game.Platform, IsPlaylist = false }).ToList();
+
+                    if (numberOfGamesInPlaylists > 0)
+                    {
+                        foreach (var playlistSetting in playlistsToExport)
+                        {
+                            gamesByPlatform.Add(playlistSetting.Games.OrderBy(game => game.SortTitleOrTitle)
+                                .GroupBy(game => new { Platform= playlistSetting.Name, IsPlaylist = true }).First());
+                        }
+                    }
+                    
                     Parallel.ForEach(gamesByPlatform, gamePlatform =>
                     {
-                        var platform = gamePlatform.First().Platform;
-                        var platformFolderName = Unbroken.LaunchBox.Helper.CoerceValidFileName(platform);
+                        var platform = gamePlatform.Key.Platform;
+                        var platformFolderName = Unbroken.LaunchBox.NamingHelper.CoerceValidFileName(platform);
                         var platformPath = Path.Combine(selectedFolder, platformFolderName);
                         Directory.CreateDirectory(platformPath);
                         var metadataBuilder = new StringBuilder();
 
-                        bool exportAssets = exportAssetsChecked && platformAssetExportList.Contains(platform);
-                        bool exportApplication = exportApplicationChecked && platformApplicationExportList.Contains(platform);
-                        bool exportMetadata = (exportMetadataChecked && platformMetadataExportList.Contains(platform)) || (exportApplication && !copyApplication) || (exportAssets && !copyAssets);
+                        bool exportAssets = false;
+                        bool exportApplication = false;
+                        bool exportMetadata = false;
+
+                        if (gamePlatform.Key.IsPlaylist)
+                        {
+                            exportAssets = exportAssetsChecked && (playlistAssetExportList.Contains(platform));
+                            exportApplication = exportApplicationChecked && playlistApplicationExportList.Contains(platform);
+                            exportMetadata = (exportMetadataChecked && playlistMetadataExportList.Contains(platform)) || (exportApplication && !copyApplication) || (exportAssets && !copyAssets);
+                        }
+                        else
+                        {
+                            exportAssets = exportAssetsChecked && (platformAssetExportList.Contains(platform));
+                            exportApplication = exportApplicationChecked && platformApplicationExportList.Contains(platform);
+                            exportMetadata = (exportMetadataChecked && platformMetadataExportList.Contains(platform)) || (exportApplication && !copyApplication) || (exportAssets && !copyAssets);
+                        }
+
+                        
 
                         if (exportMetadata)
                         {
@@ -482,6 +516,12 @@ namespace PegasusExportPlugin
             
             ((DataGridViewCheckBoxColumnHeaderCell)colSelected.HeaderCell).Select(true);
 
+
+            var playlistList = new BindingList<Launchbox.PlaylistSetting>(_dataManager.GetAllPlaylists().Select(playlist => new Launchbox.PlaylistSetting() { Name = playlist.Name, Games  = playlist.GetAllGames(false)}).ToList());
+            dgvPlaylists.AutoGenerateColumns = false;
+            dgvPlaylists.DataSource = playlistList;
+
+            ((DataGridViewCheckBoxColumnHeaderCell)colSelected2.HeaderCell).Select(true);
         }
 
         private void RadLinkAssets_CheckedChanged(object sender, EventArgs e)

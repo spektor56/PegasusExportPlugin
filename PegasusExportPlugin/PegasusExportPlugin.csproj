@@ -44,18 +44,14 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Unbroken, Version=9.10.0.2, Culture=neutral, PublicKeyToken=97d6238f04304129, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\LaunchBox\Plugins\Unbroken.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Unbroken">
+      <HintPath>..\..\..\..\..\LaunchBox\Core\Unbroken.dll</HintPath>
     </Reference>
     <Reference Include="Unbroken.LaunchBox">
-      <HintPath>..\..\..\..\..\LaunchBox\Plugins\Unbroken.LaunchBox.dll</HintPath>
+      <HintPath>..\..\..\..\..\LaunchBox\Core\Unbroken.LaunchBox.dll</HintPath>
     </Reference>
-    <Reference Include="Unbroken.LaunchBox.Plugins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=558191e84f56affc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\LaunchBox\Plugins\Unbroken.LaunchBox.Plugins.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Unbroken.LaunchBox.Plugins">
+      <HintPath>..\..\..\..\..\LaunchBox\Core\Unbroken.LaunchBox.Plugins.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -78,6 +74,7 @@
     </Compile>
     <Compile Include="Launchbox\ImageDetail.cs" />
     <Compile Include="Launchbox\PlatformSetting.cs" />
+    <Compile Include="Launchbox\PlaylistSetting.cs" />
     <Compile Include="ProgramEntry.cs" />
     <Compile Include="Pegasus\PegasusAssetType.cs" />
     <Compile Include="Program.cs" />
