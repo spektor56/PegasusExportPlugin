@@ -127,8 +127,11 @@ namespace PegasusExportPlugin
                     {
                         foreach (var playlistSetting in playlistsToExport)
                         {
-                            gamesByPlatform.Add(playlistSetting.Games.OrderBy(game => game.SortTitleOrTitle)
-                                .GroupBy(game => new { Platform= playlistSetting.Name, IsPlaylist = true }).First());
+                            if (playlistSetting.Games.Length > 0)
+                            {
+                                gamesByPlatform.Add(playlistSetting.Games.OrderBy(game => game.SortTitleOrTitle)
+                                    .GroupBy(game => new {Platform = playlistSetting.Name, IsPlaylist = true}).First());
+                            }
                         }
                     }
                     
