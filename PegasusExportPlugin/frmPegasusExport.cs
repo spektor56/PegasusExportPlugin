@@ -468,11 +468,11 @@ namespace PegasusExportPlugin
                                 {
                                     if (singleExport)
                                     {
-                                        exportImages = game.Value.Select(image => image.Image).ToList();
+                                        exportImages.Add(game.Value.First().Image);
                                     }
                                     else
                                     {
-                                        exportImages.Add(game.Value.First().Image);
+                                        exportImages = game.Value.Select(image => image.Image).ToList();
                                     }
                                 }
 
