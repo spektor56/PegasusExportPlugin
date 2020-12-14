@@ -440,7 +440,7 @@ namespace PegasusExportPlugin
 
                                 List<ImageDetails> exportImages = new List<ImageDetails>();
 
-                                if (pegasusImageType == PegasusAssetType.BoxFront)
+                                if (pegasusImageType == PegasusAssetType.BoxFront || pegasusImageType == PegasusAssetType.BoxBack)
                                 {
                                     ImageDetails exportImage = null;
                                     exportImage = game.Value.First().Image;
