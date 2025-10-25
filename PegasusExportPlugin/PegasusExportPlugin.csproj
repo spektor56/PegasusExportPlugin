@@ -10,12 +10,6 @@
     <OutputPath>..\..\..\..\LaunchBox\Plugins\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="img\img0.jpg" />
     <Content Include="img\img1.JPG" />
     <Content Include="img\img2.JPG" />
