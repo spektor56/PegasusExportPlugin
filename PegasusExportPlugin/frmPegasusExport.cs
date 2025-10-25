@@ -311,7 +311,7 @@ namespace PegasusExportPlugin
                             if (exportAssets)
                             {
                                 var mediaFolder = Path.Combine(platformPath, "media",
-                                    Path.GetFileNameWithoutExtension(game.ApplicationPath));
+                                    Path.GetFileNameWithoutExtension(game.ApplicationPath).Trim());
                                 
                                 var images = game.GetAllImagesWithDetails();
 
