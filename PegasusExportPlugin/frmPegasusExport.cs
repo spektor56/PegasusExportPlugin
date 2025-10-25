@@ -13,11 +13,10 @@ using System.Xml.Linq;
 using PegasusExportPlugin.Controls;
 using PegasusExportPlugin.Launchbox;
 using PegasusExportPlugin.Pegasus;
-using Unbroken;
 using Unbroken.LaunchBox.Plugins;
 using Unbroken.LaunchBox.Plugins.Data;
 using PegasusExportPlugin.Extensions;
-using Unbroken.LaunchBox;
+using MethodInvoker = System.Windows.Forms.MethodInvoker;
 
 namespace PegasusExportPlugin
 {
@@ -135,11 +134,12 @@ namespace PegasusExportPlugin
                             }
                         }
                     }
-                    
+                    var invalidChars = new HashSet<char>(Path.GetInvalidPathChars());
+
                     Parallel.ForEach(gamesByPlatform, gamePlatform =>
                     {
                         var platform = gamePlatform.Key.Platform;
-                        var platformFolderName = Unbroken.LaunchBox.NamingHelper.CoerceValidFileName(platform);
+                        var platformFolderName = new string(platform.Where(c => !invalidChars.Contains(c)).ToArray());
                         var platformPath = Path.Combine(selectedFolder, platformFolderName);
                         Directory.CreateDirectory(platformPath);
                         var metadataBuilder = new StringBuilder();
